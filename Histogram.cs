@@ -23,25 +23,6 @@ namespace imageComputing
             drawImage.Save("results/cumulativeHistogramResult.bmp");
         }
 
-        public static void drawDynamicExpansion(ImageData toCompute) {
-            for (int yIndex=0; yIndex<toCompute.image.Height; yIndex++) {
-                for (int xIndex=0; xIndex<toCompute.image.Width; xIndex++) {
-                    Color currentColor = toCompute.image.GetPixel(xIndex,yIndex);
-                    int red = (int)(toCompute.dynamicExpansionParameters[0]*currentColor.R + toCompute.dynamicExpansionParameters[1]);
-                    if (red >= 255) red = 255;
-                    if (red < 0) red = 0;
-                    int green = (int)(toCompute.dynamicExpansionParameters[0]*currentColor.G + toCompute.dynamicExpansionParameters[1]);
-                    if (green >= 255) green = 255;
-                    if (green < 0) green = 0;
-                    int blue = (int)(toCompute.dynamicExpansionParameters[0]*currentColor.B + toCompute.dynamicExpansionParameters[1]);
-                    if (blue >= 255) blue = 255;
-                    if (blue < 0) blue = 0;
-                    toCompute.image.SetPixel(xIndex, yIndex, Color.FromArgb(red, green, blue));
-                }
-            }
-            toCompute.saveBitmap("results/dynamicExpansionResult.bmp");
-        }
-
         public static List<float> getSticksHeight(ImageData toCompute) { //Calculate a representative height for each "stick" of the histogram
             List<float> sticksHeight = new List<float>();
             sticksHeight.AddRange(Enumerable.Repeat(0f, 256));
@@ -90,6 +71,36 @@ namespace imageComputing
             return(drawImage);
         }
 
-        
+        public static void drawDynamicExpansion(ImageData toCompute) {
+            for (int yIndex=0; yIndex<toCompute.image.Height; yIndex++) {
+                for (int xIndex=0; xIndex<toCompute.image.Width; xIndex++) {
+                    Color currentColor = toCompute.image.GetPixel(xIndex,yIndex);
+                    int red = (int)(toCompute.dynamicExpansionParameters[0]*currentColor.R + toCompute.dynamicExpansionParameters[1]);
+                    if (red >= 255) red = 255;
+                    if (red < 0) red = 0;
+                    int green = (int)(toCompute.dynamicExpansionParameters[0]*currentColor.G + toCompute.dynamicExpansionParameters[1]);
+                    if (green >= 255) green = 255;
+                    if (green < 0) green = 0;
+                    int blue = (int)(toCompute.dynamicExpansionParameters[0]*currentColor.B + toCompute.dynamicExpansionParameters[1]);
+                    if (blue >= 255) blue = 255;
+                    if (blue < 0) blue = 0;
+                    toCompute.image.SetPixel(xIndex, yIndex, Color.FromArgb(red, green, blue));
+                }
+            }
+            toCompute.saveBitmap("results/dynamicExpansionResult.bmp");
+        }
+
+        public static void drawHistogramEqualization(ImageData toCompute) {
+            for (int yIndex=0; yIndex<toCompute.image.Height; yIndex++) {
+                for (int xIndex=0; xIndex<toCompute.image.Width; xIndex++) {
+                    Color pixelColor = toCompute.image.GetPixel(xIndex, yIndex);
+                    int currentGreyLevel = (int)(0.299*pixelColor.R + 0.587*pixelColor.G + 0.114*pixelColor.B);
+                    int newGreyLevel = (255*toCompute.cumulativeHistogram[currentGreyLevel]/(toCompute.image.Height*toCompute.image.Width));
+                    Console.WriteLine(newGreyLevel);
+                    toCompute.image.SetPixel(xIndex, yIndex, Color.FromArgb(newGreyLevel, newGreyLevel, newGreyLevel));
+                }
+            }
+            toCompute.saveBitmap("results/histogramEqualizationResult.bmp");
+        }
     }
 }

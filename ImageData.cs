@@ -11,19 +11,26 @@ namespace imageComputing
         public Bitmap bitmapImage { get; set; }
         public FasterBitmap image { get; set; }
         public List<int> histogram { get; private set; }
+        public List<int> cumulativeHistogram {get; private set;}
         public double entropy { get; private set; }
         public float[] dynamicExpansionParameters {get; private set; }
 
         public ImageData(string imagePath) { //Constructor
             image = createBitmap(imagePath);
             getHistogramFromImage();
+            getCumulativeHistogram();
             getEntropy();
             getExpansionParameters();
         }
         
         private void createHistogram() { //Initialize the histogram
             this.histogram = new List<int>();
-            histogram.AddRange(Enumerable.Repeat(0, 256));
+            this.histogram.AddRange(Enumerable.Repeat(0, 256));
+        }
+
+        private void createCumulativeHistogram() { //Initialize the cumulative histogram
+            this.cumulativeHistogram = new List<int>();
+            this.cumulativeHistogram.AddRange(Enumerable.Repeat(0, 256));
         }
 
         private FasterBitmap createBitmap(string imagePath) { //Initialization of the Bitmap and FasterBitmap entities
@@ -57,6 +64,15 @@ namespace imageComputing
                     greyLevel = (int)(0.299*pixelColor.R + 0.587*pixelColor.G + 0.114*pixelColor.B);
                     this.histogram[greyLevel]++;
                 }
+            }
+        }
+
+        private void getCumulativeHistogram() { //Calculate the image's cumulative histogram
+            int sum = 0;
+            createCumulativeHistogram();
+            for (int index=0; index<256; index++) {
+                sum = sum + this.histogram[index];
+                this.cumulativeHistogram[index] = sum;
             }
         }
 

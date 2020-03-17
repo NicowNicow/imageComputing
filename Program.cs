@@ -12,7 +12,6 @@ namespace imageComputing
 
 /*TODO: 
 Histogram: Toutes les fonctions Slides Partie 3:
-    Expansion de dynamique
     Seuillage automatique
     Maximisation d’entropie
     Maximisation de la variance interclasse
@@ -23,11 +22,10 @@ Filtres:
     Filtre Gaussien, Prewitt, Robert, Sobel, Laplaciens 4 et 8 (Slides Partie 4)
     Toutes les fonctions Slides partie 5
     Réflechir au fonctions Slides partie 6
-    Gestion des images en couleurs: Pas en RGB du coup mais en HSV; faire pour SimpleFilters.cs et AdvancedFilters.cs
+    Gestion des images en couleurs: Pas en RGB du coup mais en HSV; faire pour SimpleFilters.cs (filtre médian uniquement) et Histogram (egalisation, look-up table?, seuillage?)
     Pour les gradients: Norme L1: Addition, Norme L2: Norme Euclidienne, Norme Infinie: Maximum des deux valeurs
 Créer les dll
 Optimization:
-    Utiliser le bitlock
     Utiliser la librairie Cudafy.NET pour passer de la charge au GPU
     Utiliser des threads peut être aussi
 */
@@ -47,7 +45,7 @@ Optimization:
                  Console.WriteLine("Please give the path to a bitmap image!");
                  return;
             }
-            Histogram.drawDynamicExpansion(toCompute);
+            Histogram.drawHistogramEqualization(toCompute);
             Histogram.drawHistogram(toCompute);
             //Console.WriteLine(toCompute.entropy);
             // var watch = System.Diagnostics.Stopwatch.StartNew();
