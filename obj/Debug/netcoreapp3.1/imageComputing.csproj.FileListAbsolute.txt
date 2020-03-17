@@ -1,0 +1,17 @@
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\bin\Debug\netcoreapp3.1\imageComputing.exe
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\bin\Debug\netcoreapp3.1\imageComputing.deps.json
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\bin\Debug\netcoreapp3.1\imageComputing.runtimeconfig.json
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\bin\Debug\netcoreapp3.1\imageComputing.runtimeconfig.dev.json
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\bin\Debug\netcoreapp3.1\imageComputing.dll
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\bin\Debug\netcoreapp3.1\imageComputing.pdb
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\obj\Debug\netcoreapp3.1\imageComputing.csprojAssemblyReference.cache
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\obj\Debug\netcoreapp3.1\imageComputing.AssemblyInfoInputs.cache
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\obj\Debug\netcoreapp3.1\imageComputing.AssemblyInfo.cs
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\obj\Debug\netcoreapp3.1\imageComputing.dll
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\obj\Debug\netcoreapp3.1\imageComputing.pdb
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\bin\Debug\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\bin\Debug\netcoreapp3.1\System.Drawing.Common.dll
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\obj\Debug\netcoreapp3.1\imageComputing.csproj.CopyComplete
