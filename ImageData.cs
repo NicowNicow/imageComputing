@@ -10,19 +10,19 @@ namespace imageComputing
     {
         public Bitmap bitmapImage { get; set; }
         public FasterBitmap image { get; set; }
-        public List<int> histogram { get; private set; }
-        public List<int> cumulativeHistogram {get; private set;}
-        public double entropy { get; private set; }
-        public float[] dynamicExpansionParameters {get; private set; }
+        public int pixelNumber { get; private set; }
+        public string fileName { get; private set; }
+        public List<int> histogram { get; private set; } = null;
+        public List<int> cumulativeHistogram {get; private set;} = null;
+        public double entropy { get; private set; } = 0;
+        public float[] dynamicExpansionParameters {get; private set; } = null;
 
         public ImageData(string imagePath) { //Constructor
             image = createBitmap(imagePath);
-            getHistogramFromImage();
-            getCumulativeHistogram();
-            getEntropy();
-            getExpansionParameters();
+            fileName = Path.GetFileNameWithoutExtension(imagePath);
+            pixelNumber = image.Height*image.Width;
         }
-        
+
         private void createHistogram() { //Initialize the histogram
             this.histogram = new List<int>();
             this.histogram.AddRange(Enumerable.Repeat(0, 256));
@@ -55,7 +55,7 @@ namespace imageComputing
             this.bitmapImage.Save(savePath);
         }
 
-        private void getHistogramFromImage() { //Calculate the image's histogram
+        public void getHistogramFromImage() { //Calculate the image's histogram
             int greyLevel; 
             createHistogram();
             for (int Yindex=0; Yindex<this.image.Height; Yindex++) {
@@ -67,7 +67,7 @@ namespace imageComputing
             }
         }
 
-        private void getCumulativeHistogram() { //Calculate the image's cumulative histogram
+        public void getCumulativeHistogram() { //Calculate the image's cumulative histogram
             int sum = 0;
             createCumulativeHistogram();
             for (int index=0; index<256; index++) {
@@ -76,7 +76,7 @@ namespace imageComputing
             }
         }
 
-        private void getEntropy() { //Calculate the image entropy
+        public void getEntropy() { //Calculate the image entropy
             double entropySum = 0;
             double tempValue = 0;
             double maxPixel = (double) this.image.Height*this.image.Width ;
@@ -89,7 +89,7 @@ namespace imageComputing
             this.entropy = -entropySum;
         }
 
-        private void getExpansionParameters() { //Calculate the two parameters for dynamic expansion
+        public void getExpansionParameters() { //Calculate the two parameters for dynamic expansion
             float [] parameters = {0,0};
             int h0 = 0, h1 = 255;
             h0 = getMinHistogram();

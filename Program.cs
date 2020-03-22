@@ -21,8 +21,8 @@ Filtres:
     Implémente un héritage de Convolution Windows qui crée une liste avec les valeurs requises pour le gradient et/ou Gauss
     Filtre Gaussien, Prewitt, Robert, Sobel, Laplaciens 4 et 8 (Slides Partie 4)
     Toutes les fonctions Slides partie 5
-    Réflechir au fonctions Slides partie 6
-    Gestion des images en couleurs: Pas en RGB du coup mais en HSV; faire pour SimpleFilters.cs (filtre médian uniquement) et Histogram (egalisation, look-up table?, seuillage?)
+    Toutes les fonctions Slides partie 6
+    Gestion des images en couleurs: Pas en RGB du coup mais en HSV; faire pour SimpleFilters.cs (filtre médian uniquement) et Histogram (egalisation, seuillage)
     Pour les gradients: Norme L1: Addition, Norme L2: Norme Euclidienne, Norme Infinie: Maximum des deux valeurs
 Créer les dll
 Optimization:
@@ -45,13 +45,8 @@ Optimization:
                  Console.WriteLine("Please give the path to a bitmap image!");
                  return;
             }
-            Histogram.drawHistogramEqualization(toCompute);
-            Histogram.drawHistogram(toCompute);
-            //Console.WriteLine(toCompute.entropy);
-            // var watch = System.Diagnostics.Stopwatch.StartNew();
-            // SimpleFilters.doFilters(toCompute, convolutionWindowDiameter, convolutionWindowFilter);
-            // watch.Stop();
-            // Console.WriteLine(watch.ElapsedMilliseconds);
+            toCompute.getHistogramFromImage();
+            Threshold.simpleEntropyThreshold(toCompute);
         }
 
     }

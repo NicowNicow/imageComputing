@@ -23,25 +23,25 @@ namespace imageComputing
         static void chooseConvolution(ConvolutionWindow window, ImageData toCompute) {
             if (window.processingFilter == "median") {
                 doMedianFilter(window, toCompute);
-                savePath = "results/medianFilterResult.bmp";
+                savePath = "results/" + toCompute.fileName + "MedianFilterResult.bmp";
             }
             else if (window.processingFilter == "dilation") {
                 doDilation(window, toCompute);
-                savePath = "results/dilationResult.bmp";
+                savePath = "results/" + toCompute.fileName + "DilationResult.bmp";
             }
             else if (window.processingFilter == "erosion") {
                 doErosion(window, toCompute);
-                savePath = "results/erosionResult.bmp";
+                savePath = "results/" + toCompute.fileName + "ErosionResult.bmp";
             }
             else if (window.processingFilter == "closing") {
                 doDilation(window, toCompute);
                 doErosion(window, toCompute);
-                savePath = "results/closingResult.bmp";
+                savePath = "results/" + toCompute.fileName + "ClosingResult.bmp";
             }
             else if (window.processingFilter == "opening") {
                 doErosion(window, toCompute);
                 doDilation(window, toCompute);
-                savePath = "results/openingResult.bmp";
+                savePath = "results/" + toCompute.fileName + "OpeningResult.bmp";
             }
         }
 

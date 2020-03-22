@@ -13,14 +13,14 @@ namespace imageComputing
             List<float> sticksHeight = getSticksHeight(toCompute);
             Bitmap drawImage = drawWhite(toCompute);
             drawImage = drawSticks(drawImage, sticksHeight);
-            drawImage.Save("results/histogramResult.bmp");
+            drawImage.Save("results/" + toCompute.fileName + "HistogramResult.bmp");
         }
 
         public static void drawCumulativeHistogram(ImageData toCompute) { //Draw the cumulative histogram on an output bmp file
             List<float> sticksHeight = getSticksHeight(toCompute);
             Bitmap drawImage = drawWhite(toCompute);
             drawImage = drawCumulativeSticks(toCompute, drawImage);
-            drawImage.Save("results/cumulativeHistogramResult.bmp");
+            drawImage.Save("results/" + toCompute.fileName + "CumulativeHistogramResult.bmp");
         }
 
         public static List<float> getSticksHeight(ImageData toCompute) { //Calculate a representative height for each "stick" of the histogram
@@ -87,7 +87,7 @@ namespace imageComputing
                     toCompute.image.SetPixel(xIndex, yIndex, Color.FromArgb(red, green, blue));
                 }
             }
-            toCompute.saveBitmap("results/dynamicExpansionResult.bmp");
+            toCompute.saveBitmap("results/" + toCompute.fileName + "DynamicExpansionResult.bmp");
         }
 
         public static void drawHistogramEqualization(ImageData toCompute) {
@@ -100,7 +100,7 @@ namespace imageComputing
                     toCompute.image.SetPixel(xIndex, yIndex, Color.FromArgb(newGreyLevel, newGreyLevel, newGreyLevel));
                 }
             }
-            toCompute.saveBitmap("results/histogramEqualizationResult.bmp");
+            toCompute.saveBitmap("results/" + toCompute.fileName + "HistogramEqualizationResult.bmp");
         }
     }
 }
