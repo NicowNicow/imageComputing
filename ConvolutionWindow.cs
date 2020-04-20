@@ -5,7 +5,7 @@ namespace imageComputing
 {
     public class ConvolutionWindow
     {
-        public int windowDiameter { get; private set; }
+        public int windowDiameter { get; protected set; }
         public int totalPixel { get; private set; }
         public string processingFilter { get; private set; }
         public int pixelsCounter { get; set; }
@@ -13,23 +13,19 @@ namespace imageComputing
 
 
         public ConvolutionWindow(int diameter) { //Constructor with default filter
-            windowDiameter = diameter;
-            processingFilter = "median";
-            getTotalPixel(diameter);
-            pixelsCounter =0;
-            sumElements = new List<int>();
+            this.windowDiameter = diameter;
+            this.processingFilter = "median";
+            this.totalPixel = diameter*diameter;
+            this.pixelsCounter =0;
+            this.sumElements = new List<int>();
         }
 
         public ConvolutionWindow(int diameter, string filter) { //Constructor with custom filter
-            windowDiameter = diameter;
-            processingFilter = filter;
-            getTotalPixel(diameter);
-            pixelsCounter =0;
-            sumElements = new List<int>();
-        }
-
-        private void getTotalPixel(int windowDiameter) { //Get the total number of pixels for the selected convolution window
-            this.totalPixel = windowDiameter*windowDiameter;
+            this.windowDiameter = diameter;
+            this.processingFilter = filter;
+            this.totalPixel = diameter*diameter;
+            this.pixelsCounter =0;
+            this.sumElements = new List<int>();
         }
 
         public void ConvolutionWindowPixelsSum(FasterBitmap toCompute, int centerPositionX, int centerPositionY) {
@@ -49,11 +45,12 @@ namespace imageComputing
 
     }
 
-    public abstract class CreateConvolutionWindow {
+    public abstract class CreateConvolutionWindow 
+    {
 
-        public static ConvolutionWindow doCreate(string diameter, string filter) {
+        public static ConvolutionWindow doCreate(string diameter, string filter) { //Create a Window with the selected diameter and filter
             int diameterTemp = 0;
-            if (!int.TryParse(diameter, out diameterTemp)) {
+            if ((!int.TryParse(diameter, out diameterTemp))||(diameterTemp%2==0)) {
                 Console.WriteLine("Given diameter is invalid!");
                 return null;
             }
@@ -68,9 +65,9 @@ namespace imageComputing
             return(window);
         }
 
-        public static ConvolutionWindow doCreate(string diameter) {
+        public static ConvolutionWindow doCreate(string diameter) { //Create a Median Filter Window with the selected diameter
             int diameterTemp = 0;
-            if (!int.TryParse(diameter, out diameterTemp)) {
+            if ((!int.TryParse(diameter, out diameterTemp))||(diameterTemp%2==0)) {
                 Console.WriteLine("Given diameter is invalid!");
                 return null;
             }
@@ -82,5 +79,4 @@ namespace imageComputing
             return(window);
         }
     }
-
 }

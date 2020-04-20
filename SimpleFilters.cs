@@ -8,16 +8,12 @@ namespace imageComputing
 {
     abstract class SimpleFilters
     {
-
-        static bool saveFile = true;
         static string savePath;
 
         public static void doFilters(ImageData toCompute, string convolutionWindowDiameter, string convolutionWindoFilter){
             ConvolutionWindow window = CreateConvolutionWindow.doCreate(convolutionWindowDiameter, convolutionWindoFilter);
             chooseConvolution(window, toCompute);
-            if (saveFile == true) {
-                toCompute.saveBitmap(savePath);
-            }
+            toCompute.saveBitmap(savePath);
         }
 
         static void chooseConvolution(ConvolutionWindow window, ImageData toCompute) {
@@ -62,7 +58,6 @@ namespace imageComputing
             List<Color> colorList = new List<Color>();
             for (int yIndex=0; yIndex<toCompute.image.Height; yIndex++) {
                 for (int xIndex=0; xIndex<toCompute.image.Width; xIndex++) {
-                    window.pixelsCounter = 0;
                     window.sumElements.Clear();
                     window.ConvolutionWindowPixelsSum(toCompute.image, xIndex, yIndex);
                     int max = window.sumElements.Max();
@@ -82,7 +77,6 @@ namespace imageComputing
             List<Color> colorList = new List<Color>();
             for (int Yindex=0; Yindex<toCompute.image.Height; Yindex++) {
                 for (int Xindex=0; Xindex<toCompute.image.Width; Xindex++) {
-                    window.pixelsCounter = 0;
                     window.sumElements.Clear();
                     window.ConvolutionWindowPixelsSum(toCompute.image, Xindex, Yindex);
                     int min = window.sumElements.Min();

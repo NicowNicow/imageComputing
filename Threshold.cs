@@ -16,11 +16,11 @@ namespace imageComputing
                 return;
             }
             else {
-                doThreshold(toCompute, threshold, "results/" + toCompute.fileName + "ManualThresholdResult.bmp");
+                doSimpleThreshold(toCompute, threshold, "results/" + toCompute.fileName + "ManualThresholdResult.bmp");
             }
         }
 
-        private static void doThreshold(ImageData toCompute, int threshold, string savePath) {
+        private static void doSimpleThreshold(ImageData toCompute, int threshold, string savePath) {
             Color currentColor; 
             for (int yIndex=0; yIndex<toCompute.image.Height; yIndex++) {
                     for (int xIndex=0; xIndex<toCompute.image.Width; xIndex++) {
@@ -69,7 +69,7 @@ namespace imageComputing
                     maxThreshold = threshold;
                 }
             }
-            doThreshold(toCompute, maxThreshold, "results/" + toCompute.fileName + "SimpleVarianceThresholdResult.bmp");
+            doSimpleThreshold(toCompute, maxThreshold, "results/" + toCompute.fileName + "SimpleVarianceThresholdResult.bmp");
         }
 
         public static void simpleEntropyThreshold(ImageData toCompute) {
@@ -100,7 +100,7 @@ namespace imageComputing
                     maxThreshold = threshold;
                 }
             }
-            doThreshold(toCompute, maxThreshold, "results/" + toCompute.fileName + "SimpleEntropyThresholdResult.bmp");
+            doSimpleThreshold(toCompute, maxThreshold, "results/" + toCompute.fileName + "SimpleEntropyThresholdResult.bmp");
         }
 
     }
