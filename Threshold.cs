@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Drawing;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace imageComputing
 {
@@ -20,22 +21,79 @@ namespace imageComputing
             }
         }
 
+        public static void ManualMultiThreshold(ImageData toCompute) {
+            List<int> thresholds = new List<int>();
+            int tempoValue = 0;
+            int failParseCounter  = 0;
+            Console.WriteLine("Enter thresholds values: ");
+            var thresholdValues = Console.ReadLine().Split(" ");
+            foreach (var value in thresholdValues)
+            {
+                if (!int.TryParse(value , out tempoValue)) {
+                    failParseCounter++;
+                }
+                else {
+                    thresholds.Add(tempoValue);
+                }
+            }
+            if (failParseCounter != 0) Console.WriteLine("An invalid threshold value was given. It will be ignored.");
+            if (thresholds.Count == 0) {
+                Console.WriteLine("No valid threshold given. Process cancelled.");
+                return;
+            }
+            else {
+                doMultiThreshold(toCompute, thresholds, "results/" + toCompute.fileName + "ManualMultiThresholdResult.bmp");
+            }
+        }
+
         private static void doSimpleThreshold(ImageData toCompute, int threshold, string savePath) {
             Color currentColor; 
-            for (int yIndex=0; yIndex<toCompute.image.Height; yIndex++) {
-                    for (int xIndex=0; xIndex<toCompute.image.Width; xIndex++) {
+            for (int yIndex=0; yIndex < toCompute.image.Height; yIndex++) {
+                for (int xIndex=0; xIndex < toCompute.image.Width; xIndex++) {
+                    Color pixelColor = toCompute.image.GetPixel(xIndex, yIndex);
+                    int currentGreyLevel = (int)(0.299*pixelColor.R + 0.587*pixelColor.G + 0.114*pixelColor.B);
+                    if (currentGreyLevel >= threshold) {
+                        currentColor = Color.FromName("White");
+                    } 
+                    else {
+                        currentColor = Color.FromName("Black"); 
+                    }
+                    toCompute.image.SetPixel(xIndex,yIndex, currentColor);
+                }
+            }
+            toCompute.saveBitmap(savePath);
+        }
+
+        private static void doMultiThreshold(ImageData toCompute, List<int> thresholds, string savePath) {
+            Random random = new Random();
+            int colorIndex = 0;
+            List<Color> newPixelColor = new List<Color>();
+            List<Color> possibleColor = new List<Color>();
+            int indexMaxThreshold = thresholds.IndexOf(thresholds.Max());
+            for (int index =0; index < thresholds.Count; index++) {
+                if (index == indexMaxThreshold) possibleColor.Add(Color.FromName("White"));
+                else possibleColor.Add(Color.FromArgb(random.Next(0,256), random.Next(0,256), random.Next(0,256)));
+            }
+            for (int yIndex=0; yIndex < toCompute.image.Height; yIndex++) {
+                for (int xIndex=0; xIndex < toCompute.image.Width; xIndex++) {
+                    int currentThreshold = 0;
+                    foreach (int threshold in thresholds) {
                         Color pixelColor = toCompute.image.GetPixel(xIndex, yIndex);
                         int currentGreyLevel = (int)(0.299*pixelColor.R + 0.587*pixelColor.G + 0.114*pixelColor.B);
-                        if (currentGreyLevel >= threshold) {
-                            currentColor = Color.FromName("White");
-                        } 
-                        else {
-                            currentColor = Color.FromName("Black"); 
-                        }
-                        toCompute.image.SetPixel(xIndex,yIndex, currentColor);
+                        if ((currentGreyLevel >= threshold)&&(threshold > currentThreshold)) currentThreshold = threshold;
                     }
+                    int indexOfThreshold = thresholds.IndexOf(currentThreshold);
+                    if (indexOfThreshold == -1) newPixelColor.Add(Color.FromName("Black"));
+                    else newPixelColor.Add(possibleColor[indexOfThreshold]);
                 }
-                toCompute.saveBitmap(savePath);
+            }
+            for (int yIndex=0; yIndex < toCompute.image.Height; yIndex++) {
+                for (int xIndex=0; xIndex < toCompute.image.Width; xIndex++) {
+                    toCompute.image.SetPixel(xIndex,yIndex, newPixelColor[colorIndex]);
+                    colorIndex++;
+                }
+            }
+            toCompute.saveBitmap(savePath);
         }
 
         public static void simpleVarianceThreshold(ImageData toCompute) {
@@ -101,6 +159,151 @@ namespace imageComputing
                 }
             }
             doSimpleThreshold(toCompute, maxThreshold, "results/" + toCompute.fileName + "SimpleEntropyThresholdResult.bmp");
+        }
+
+        public static void multiVarianceThreshold(ImageData toCompute, int thresholdsNumber) {
+            Random random = new Random();
+            double maxVariance = 0;
+            List<int> thresholds = new List<int>();
+            List<int> possibleThresholds = new List<int>();
+            possibleThresholds.AddRange(Enumerable.Repeat(0, thresholdsNumber));
+            for (long index = 0; index < (long)Math.Pow(256, thresholdsNumber); index++) {
+                double currentVariance = calculateMultiVariance(toCompute, possibleThresholds, thresholdsNumber);
+                if (currentVariance >= maxVariance) {
+                    thresholds.Clear();
+                    thresholds.AddRange(Enumerable.Repeat(0, thresholdsNumber));
+                    maxVariance = currentVariance;
+                    for (int index2 = 0; index2 < thresholdsNumber; index2++) {
+                        thresholds[index2] = possibleThresholds[index2];
+                    }
+                }
+                possibleThresholds[0]++;
+                for (int changeIndex = 0; changeIndex < thresholdsNumber; changeIndex++) {
+                    if (possibleThresholds[changeIndex] == 256) {
+                        try {
+                            possibleThresholds[changeIndex] = 0;
+                            possibleThresholds[changeIndex+1] = possibleThresholds[changeIndex+1] + 1;
+                        }
+                        catch (ArgumentOutOfRangeException) {
+                            continue;
+                        }
+                    }
+                }
+            }
+             for (int index =0; index <thresholdsNumber; index++) {
+                Console.WriteLine(thresholds[index]);
+             }
+            doMultiThreshold(toCompute, thresholds, "results/" + toCompute.fileName + "MultiVarianceThresholdResult.bmp");
+        }
+
+        private static double calculateMultiVariance(ImageData toCompute, List<int> thresholds, int thresholdsNumber) {
+            double variance = 0;
+            List<int> countPixelsInf = new List<int>();
+            List<int> countWeightedPixelsInf = new List<int>();
+            List<double> averageInf = new List<double>();
+            double average = 0;
+            for (int greyLevelIndex = 0; greyLevelIndex < 255; greyLevelIndex++) {
+                average = average + toCompute.histogram[greyLevelIndex]*greyLevelIndex;
+            }
+            average = (double)(average/toCompute.pixelNumber);
+            thresholds = thresholds.OrderBy(threshold => threshold).ToList();
+            for (int thresholdIndex = 0; thresholdIndex < thresholdsNumber; thresholdIndex++) {
+                int countPixelsInfTempo = 0;
+                int countWeightedPixelsInfTempo = 0;
+                for (int greyLevelIndex = 0; greyLevelIndex <= thresholds[thresholdIndex]; greyLevelIndex++) {
+                    countPixelsInfTempo = countPixelsInfTempo + toCompute.histogram[greyLevelIndex];
+                    countWeightedPixelsInfTempo = countWeightedPixelsInfTempo + toCompute.histogram[greyLevelIndex]*greyLevelIndex;
+                }
+                countPixelsInf.Add(countPixelsInfTempo);
+                countWeightedPixelsInf.Add(countWeightedPixelsInfTempo);
+                if (countPixelsInf[thresholdIndex] != 0) {
+                    averageInf.Add((double)(countWeightedPixelsInf[thresholdIndex]/countPixelsInf[thresholdIndex]));
+                }
+                else averageInf.Add(0);
+            }
+            for (int varianceIndex = 0; varianceIndex < thresholdsNumber; varianceIndex++) {
+                if (countPixelsInf[varianceIndex] != 0) {
+                    variance = variance + (double)((double)(countWeightedPixelsInf[varianceIndex]/countPixelsInf[varianceIndex])*(double)(average - averageInf[varianceIndex])*(double)(average - averageInf[varianceIndex]));
+                }
+            }
+            return(variance);
+        }
+
+        public static void multiEntropyThreshold(ImageData toCompute, int thresholdsNumber) {
+            Random random = new Random();
+            double maxEntropy = 0;
+            List<int> thresholds = new List<int>();
+            List<int> possibleThresholds = new List<int>();
+            possibleThresholds.AddRange(Enumerable.Repeat(0, thresholdsNumber));
+            for (long index = 0; index < (long)Math.Pow(256, thresholdsNumber); index++) {
+                double currentEntropy = calculateMultiEntropy(toCompute, possibleThresholds, thresholdsNumber);
+                if (currentEntropy >= maxEntropy) {
+                    thresholds.Clear();
+                    thresholds.AddRange(Enumerable.Repeat(0, thresholdsNumber));
+                    maxEntropy = currentEntropy;
+                    for (int index2 = 0; index2 < thresholdsNumber; index2++) {
+                        thresholds[index2] = possibleThresholds[index2];
+                    }
+                }
+                possibleThresholds[0]++;
+                for (int changeIndex = 0; changeIndex < thresholdsNumber; changeIndex++) {
+                    if (possibleThresholds[changeIndex] == 256) {
+                        try {
+                            possibleThresholds[changeIndex] = 0;
+                            possibleThresholds[changeIndex+1] = possibleThresholds[changeIndex+1] + 1;
+                        }
+                        catch (ArgumentOutOfRangeException) {
+                            continue;
+                        }
+                    }
+                }
+            }
+            doMultiThreshold(toCompute, thresholds, "results/" + toCompute.fileName + "MultiEntropyThresholdResult.bmp");
+        }
+
+        private static double calculateMultiEntropy(ImageData toCompute, List<int> thresholds, int thresholdsNumber) { 
+            double entropy = 0;
+            double log = 0;
+            int productCountPixelInf = 1;
+            List<int> countPixelsInf = new List<int>();
+            List<double> sums = new List<double>();
+            thresholds = thresholds.OrderBy(threshold => threshold).ToList();
+            for (int thresholdIndex = 0; thresholdIndex < thresholdsNumber; thresholdIndex++) {
+                int countPixelsInfTempo = 0;
+                double countSumsTempo = 0;
+                for (int greyLevelIndex = 0; greyLevelIndex <= thresholds[thresholdIndex]; greyLevelIndex++) {
+                    countPixelsInfTempo = countPixelsInfTempo + toCompute.histogram[greyLevelIndex];
+                }
+                countPixelsInf.Add(countPixelsInfTempo);
+                if (thresholdIndex == 0) {
+                    for (int greyLevelIndex = 1; greyLevelIndex <= thresholds[thresholdIndex]; greyLevelIndex++) {
+                        if (toCompute.histogram[greyLevelIndex] > 0) {
+                            countSumsTempo = countSumsTempo + (double)(toCompute.histogram[greyLevelIndex]*Math.Log(toCompute.histogram[greyLevelIndex]));
+                        }
+                        else {
+                            countSumsTempo = countSumsTempo + (double)(toCompute.histogram[greyLevelIndex]);
+                        }
+                    }
+                }
+                else {
+                    for (int greyLevelIndex = thresholds[thresholdIndex - 1] + 1; greyLevelIndex <= thresholds[thresholdIndex]; greyLevelIndex++) {
+                        if (toCompute.histogram[greyLevelIndex] > 0) {
+                            countSumsTempo = countSumsTempo + (double)(toCompute.histogram[greyLevelIndex]*Math.Log(toCompute.histogram[greyLevelIndex]));
+                        }
+                        else {
+                            countSumsTempo = countSumsTempo + (double)(toCompute.histogram[greyLevelIndex]);
+                        }
+                    }
+                }
+                sums.Add(countSumsTempo);
+            }
+            for (int index = 0; index < thresholdsNumber; index++) {
+                entropy = entropy + (double)((1/countPixelsInf[index])*sums[index]);
+                productCountPixelInf = productCountPixelInf * countPixelsInf[index];
+            }
+            if (productCountPixelInf >= 0) log = Math.Log(productCountPixelInf);
+            entropy = -entropy + log;
+            return(entropy);
         }
 
     }

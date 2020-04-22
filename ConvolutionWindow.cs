@@ -10,6 +10,7 @@ namespace imageComputing
         public string processingFilter { get; private set; }
         public int pixelsCounter { get; set; }
         public List<int> sumElements;
+        public List<float> sumColoredElements;
 
 
         public ConvolutionWindow(int diameter) { //Constructor with default filter
@@ -18,6 +19,7 @@ namespace imageComputing
             this.totalPixel = diameter*diameter;
             this.pixelsCounter =0;
             this.sumElements = new List<int>();
+            this.sumColoredElements = new List<float>();
         }
 
         public ConvolutionWindow(int diameter, string filter) { //Constructor with custom filter
@@ -26,6 +28,7 @@ namespace imageComputing
             this.totalPixel = diameter*diameter;
             this.pixelsCounter =0;
             this.sumElements = new List<int>();
+            this.sumColoredElements = new List<float>();
         }
 
         public void ConvolutionWindowPixelsSum(FasterBitmap toCompute, int centerPositionX, int centerPositionY) {
@@ -33,6 +36,21 @@ namespace imageComputing
                 for (int Xindex = centerPositionX - (this.windowDiameter - 1); Xindex<centerPositionX + (this.windowDiameter -1); Xindex++) {
                     try {
                         this.sumElements.Add(toCompute.GetPixel(Xindex, Yindex).B); 
+                        this.pixelsCounter++;
+                    }
+                    catch (ArgumentOutOfRangeException) {
+                        continue;
+                    }
+                }
+            }
+            return;
+        }
+
+        public void ConvolutionWindowPixelsSumForColoredFilters(FasterBitmap toCompute, int centerPositionX, int centerPositionY) {
+            for (int Yindex = centerPositionY - (this.windowDiameter - 1); Yindex< centerPositionY + (this.windowDiameter -1); Yindex++) {
+                for (int Xindex = centerPositionX - (this.windowDiameter - 1); Xindex<centerPositionX + (this.windowDiameter -1); Xindex++) {
+                    try {
+                        this.sumColoredElements.Add(HSVColor.RGBtoHSV(toCompute.GetPixel(Xindex, Yindex)).value); 
                         this.pixelsCounter++;
                     }
                     catch (ArgumentOutOfRangeException) {
@@ -54,7 +72,7 @@ namespace imageComputing
                 Console.WriteLine("Given diameter is invalid!");
                 return null;
             }
-            if ((filter != "median")&&(filter != "dilation")&&(filter != "erosion")&&(filter != "opening")&&(filter != "closing")) {
+            if ((filter != "median")&&(filter != "dilation")&&(filter != "erosion")&&(filter != "opening")&&(filter != "closing")&&(filter != "colored")) {
                 filter = "median";
             }
             ConvolutionWindow window = new ConvolutionWindow(diameterTemp, filter);

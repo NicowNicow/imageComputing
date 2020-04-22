@@ -58,12 +58,26 @@ namespace imageComputing
         public void getHistogramFromImage() { //Calculate the image's histogram
             int greyLevel; 
             createHistogram();
-            for (int Yindex=0; Yindex<this.image.Height; Yindex++) {
-                for (int Xindex=0; Xindex<this.image.Width; Xindex++) {
-                    Color pixelColor = this.image.GetPixel(Xindex, Yindex);
+            for (int yIndex=0; yIndex<this.image.Height; yIndex++) {
+                for (int xIndex=0; xIndex<this.image.Width; xIndex++) {
+                    Color pixelColor = this.image.GetPixel(xIndex, yIndex);
                     greyLevel = (int)(0.299*pixelColor.R + 0.587*pixelColor.G + 0.114*pixelColor.B);
                     this.histogram[greyLevel]++;
                 }
+            }
+        }
+
+        public void getHistogramFromColoredImage() { //Calculate the histogram from a colored image
+            createHistogram();
+            List<HSVColor> colorList = new List<HSVColor>();
+            for (int yIndex = 0; yIndex <this.image.Height; yIndex++) {
+                for (int xIndex=0; xIndex<this.image.Width; xIndex++) {
+                    colorList.Add(HSVColor.RGBtoHSV(this.image.GetPixel(xIndex, yIndex)));
+                }
+            }
+            foreach (HSVColor element in colorList) {
+                int greyLevel = HSVColor.HSVtoGreyLevelRGB(element).B;
+                this.histogram[greyLevel]++;
             }
         }
 

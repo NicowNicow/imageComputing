@@ -21,6 +21,10 @@ namespace imageComputing
                 doMedianFilter(window, toCompute);
                 savePath = "results/" + toCompute.fileName + "MedianFilterResult.bmp";
             }
+            if (window.processingFilter == "colored") {
+                doColoredMedianFilter(window, toCompute);
+                savePath = "results/" + toCompute.fileName + "ColoredMedianFilterResult.bmp";
+            }
             else if (window.processingFilter == "dilation") {
                 doDilation(window, toCompute);
                 savePath = "results/" + toCompute.fileName + "DilationResult.bmp";
@@ -49,6 +53,20 @@ namespace imageComputing
                     window.ConvolutionWindowPixelsSum(toCompute.image, xIndex, yIndex);
                     int sum = (window.sumElements.Sum())/window.pixelsCounter;
                     Color pixelColor = Color.FromArgb(sum, sum, sum);
+                    toCompute.image.SetPixel(xIndex, yIndex, pixelColor);
+                }
+            }
+        }
+
+        static void doColoredMedianFilter(ConvolutionWindow window, ImageData toCompute) {
+            for (int yIndex=0; yIndex<toCompute.image.Height; yIndex++) {
+                for (int xIndex=0; xIndex<toCompute.image.Width; xIndex++) {
+                    window.pixelsCounter = 0;
+                    window.sumColoredElements.Clear();
+                    window.ConvolutionWindowPixelsSumForColoredFilters(toCompute.image, xIndex, yIndex);
+                    float sum = (window.sumColoredElements.Sum())/window.pixelsCounter;
+                    HSVColor pixelHSVColor = HSVColor.RGBtoHSV(toCompute.image.GetPixel(xIndex, yIndex));
+                    Color pixelColor = HSVColor.HSVtoRGB(new HSVColor(pixelHSVColor.hue, pixelHSVColor.saturation, sum));
                     toCompute.image.SetPixel(xIndex, yIndex, pixelColor);
                 }
             }
