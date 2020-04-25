@@ -10,53 +10,53 @@ namespace imageComputing
     {
         static string savePath;
 
-        public static void doFilters(ImageData toCompute, string convolutionWindowFilter) {
-            AdvancedConvolutionWindow window = CreateAdvancedConvolutionWindow.doCreateFilter(convolutionWindowFilter);
-            chooseConvolution(window, toCompute);
-            toCompute.saveBitmap(savePath);
+        public static void DoFilters(ImageData toCompute, string convolutionWindowFilter, bool saveResult) {
+            AdvancedConvolutionWindow window = CreateAdvancedConvolutionWindow.DoCreateFilter(convolutionWindowFilter);
+            ChooseConvolution(window, toCompute);
+            if (saveResult == true) toCompute.SaveBitmap(savePath);
         }
 
-        public static void doFilters(ImageData toCompute, string convolutionWindowFilter, string windowNorm) {
-            AdvancedConvolutionWindow window = CreateAdvancedConvolutionWindow.doCreateFilter(convolutionWindowFilter, windowNorm);
-            chooseConvolution(window, toCompute);
-            toCompute.saveBitmap(savePath);
+        public static void DoFilters(ImageData toCompute, string convolutionWindowFilter, string windowNorm, bool saveResult) {
+            AdvancedConvolutionWindow window = CreateAdvancedConvolutionWindow.DoCreateFilter(convolutionWindowFilter, windowNorm);
+            ChooseConvolution(window, toCompute);
+            if (saveResult == true) toCompute.SaveBitmap(savePath);
         }
 
-        public static void doGaussianFilter(ImageData toCompute, string windowDiameter) {
-            AdvancedConvolutionWindow window = CreateAdvancedConvolutionWindow.doCreateDiameter(windowDiameter);
-            chooseConvolution(window, toCompute);
-            toCompute.saveBitmap(savePath);
+        public static void DoGaussianFilter(ImageData toCompute, string windowDiameter, bool saveResult) {
+            AdvancedConvolutionWindow window = CreateAdvancedConvolutionWindow.DoCreateDiameter(windowDiameter);
+            ChooseConvolution(window, toCompute);
+            if (saveResult == true) toCompute.SaveBitmap(savePath);
         }
 
-        static void chooseConvolution(AdvancedConvolutionWindow window, ImageData toCompute) {
+        static void ChooseConvolution(AdvancedConvolutionWindow window, ImageData toCompute) {
             if (window.processingFilter == "gaussian") {
-                doGaussian(window, toCompute);
+                DoGaussian(window, toCompute);
                 savePath = "results/" + toCompute.fileName + "GaussianFilterResult.bmp";
             }
             else if (window.processingFilter == "prewitt") {
-                doSobelPrewitt(window, toCompute);
+                DoSobelPrewitt(window, toCompute);
                 savePath = "results/" + toCompute.fileName + "PrewittFilterResult.bmp";
             }
             else if (window.processingFilter == "sobel") {
-                doSobelPrewitt(window, toCompute);
+                DoSobelPrewitt(window, toCompute);
                 savePath = "results/" + toCompute.fileName + "SobelFilterResult.bmp";
             }
             else if (window.processingFilter == "robert") {
-                doRobert(window, toCompute);
+                DoRobert(window, toCompute);
                 savePath = "results/" + toCompute.fileName + "RobertsFilterResult.bmp";
             }
             else if (window.processingFilter == "laplacian4") {
-                doLaplacian(window, toCompute);
+                DoLaplacian(window, toCompute);
                 savePath = "results/" + toCompute.fileName + "Laplacian4Result.bmp";
             }
             else if (window.processingFilter == "laplacian8") {
-                doLaplacian(window, toCompute);
+                DoLaplacian(window, toCompute);
                 savePath = "results/" + toCompute.fileName + "Laplacian8Result.bmp";
             }
         }
 
 
-        static void doGaussian(AdvancedConvolutionWindow window, ImageData toCompute) {
+        static void DoGaussian(AdvancedConvolutionWindow window, ImageData toCompute) {
             List<Color> colorList = new List<Color>();
             for (int yIndex=0; yIndex<toCompute.image.Height; yIndex++) {
                 for (int xIndex=0; xIndex<toCompute.image.Width; xIndex++) {
@@ -77,13 +77,13 @@ namespace imageComputing
             }
         }
 
-        static void doSobelPrewitt(AdvancedConvolutionWindow window, ImageData toCompute) {
+        static void DoSobelPrewitt(AdvancedConvolutionWindow window, ImageData toCompute) {
             List<Color> colorList = new List<Color>();
             for (int yIndex=0; yIndex<toCompute.image.Height; yIndex++) {
                 for (int xIndex=0; xIndex<toCompute.image.Width; xIndex++) {
                     window.sumElements.Clear();
                     int[] values = SobelPrewittConvolution(window, toCompute.image, xIndex, yIndex);
-                    int value = window.doNorm(values);
+                    int value = window.DoNorm(values);
                     if (value < 0) value = 0;
                     if (value > 255) value = 255;
                     colorList.Add(Color.FromArgb(value, value, value));
@@ -98,13 +98,13 @@ namespace imageComputing
             }
         }
 
-        static void doRobert(AdvancedConvolutionWindow window, ImageData toCompute) {
+        static void DoRobert(AdvancedConvolutionWindow window, ImageData toCompute) {
             List<Color> colorList = new List<Color>();
             for (int yIndex=0; yIndex<toCompute.image.Height; yIndex++) {
                 for (int xIndex=0; xIndex<toCompute.image.Width; xIndex++) {
                     window.sumElements.Clear();
                     int[] values = RobertConvolution(window, toCompute.image, xIndex, yIndex);
-                    int value = window.doNorm(values);
+                    int value = window.DoNorm(values);
                     if (value < 0) value = 0;
                     if (value > 255) value = 255;
                     colorList.Add(Color.FromArgb(value, value, value));
@@ -119,7 +119,7 @@ namespace imageComputing
             }
         }
 
-        static void doLaplacian(AdvancedConvolutionWindow window, ImageData toCompute) {
+        static void DoLaplacian(AdvancedConvolutionWindow window, ImageData toCompute) {
             List<Color> colorList = new List<Color>();
             for (int yIndex=0; yIndex<toCompute.image.Height; yIndex++) {
                 for (int xIndex=0; xIndex<toCompute.image.Width; xIndex++) {

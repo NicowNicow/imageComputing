@@ -12,18 +12,18 @@ namespace imageComputing
         public string norm {get; private set;}
 
         public AdvancedConvolutionWindow(int diameter): base(diameter, "gaussian") { //Constructor
-            setValueMatrix(diameter);
+            SetValueMatrix(diameter);
         }
 
         public AdvancedConvolutionWindow(string filter, string norm): base(3, filter) {
-            setValueMatrix(3);
+            SetValueMatrix(3);
             if (this.processingFilter == "robert") {
                 this.windowDiameter = 2;
             }
             this.norm = norm;
         }
 
-        public int doNorm(int[] values) {
+        public int DoNorm(int[] values) {
             int result = 0;
             if (this.norm == "L1") {
                 result = (int) (values[0] + values[1]);
@@ -37,30 +37,30 @@ namespace imageComputing
             return(result);
         }
 
-        private void setValueMatrix(int diameter) { //Set the Value Matrix depending on the filter and the diameter
+        private void SetValueMatrix(int diameter) { //Set the Value Matrix depending on the filter and the diameter
             switch(this.processingFilter) {
                 case "gaussian":
-                    setGaussian(diameter);
+                    SetGaussian(diameter);
                     break;
                 case "prewitt":
-                    setSobelPrewitt(1);
+                    SetSobelPrewitt(1);
                     break;
                 case "robert":
-                    setRoberts();
+                    SetRoberts();
                     break;
                 case "sobel":
-                    setSobelPrewitt(2);
+                    SetSobelPrewitt(2);
                     break;
                 case "laplacian4":
-                    setLaplacian(4);
+                    SetLaplacian(4);
                     break;
                 case "laplacian8":
-                    setLaplacian(8);
+                    SetLaplacian(8);
                     break;
             }
         }
 
-        private void setGaussian(int diameter) {
+        private void SetGaussian(int diameter) {
             int weightedSum = 0;
             int[][] values = new int[diameter][];
             for (int index=0; index< diameter; index++) {
@@ -82,7 +82,7 @@ namespace imageComputing
             this.valueMatrix = values;
         }
 
-        private void setSobelPrewitt(int selector) {
+        private void SetSobelPrewitt(int selector) {
             this.horizontalValueMatrix = new int[3][];
             this.horizontalValueMatrix[0] = new int[3]{-1, 0, 1};
             this.horizontalValueMatrix[1] = new int[3]{-selector, 0, selector};
@@ -93,7 +93,7 @@ namespace imageComputing
             this.verticalValueMatrix[2] = new int[3]{1, selector, 1};
         }
 
-        private void setRoberts() {
+        private void SetRoberts() {
             this.horizontalValueMatrix = new int[2][];
             this.horizontalValueMatrix[0] = new int[2]{1, 0};
             this.horizontalValueMatrix[1] = new int[2]{0, -1};
@@ -102,7 +102,7 @@ namespace imageComputing
             this.verticalValueMatrix[1] = new int[2]{-1,0};
         }
 
-        private void setLaplacian(int selector) {
+        private void SetLaplacian(int selector) {
             if (selector == 8) {
                 this.valueMatrix = new int[3][];
                 this.valueMatrix[0] = new int[3]{-1, -1, -1};
@@ -122,7 +122,7 @@ namespace imageComputing
     public abstract class CreateAdvancedConvolutionWindow 
     {
 
-        public static AdvancedConvolutionWindow doCreateDiameter(string diameter) { //Create a Window for gaussian filter with the given diameter
+        public static AdvancedConvolutionWindow DoCreateDiameter(string diameter) { //Create a Window for gaussian filter with the given diameter
             int diameterTemp = 0;
             if ((!int.TryParse(diameter, out diameterTemp))||(diameterTemp%2==0)) {
                 Console.WriteLine("Given diameter is invalid!");
@@ -136,7 +136,7 @@ namespace imageComputing
             return(window);
         }
 
-        public static AdvancedConvolutionWindow doCreateFilter(string filter) { //Create a 3x3  window for the given filter
+        public static AdvancedConvolutionWindow DoCreateFilter(string filter) { //Create a 3x3  window for the given filter
             if ((filter != "gaussian")&&(filter != "prewitt")&&(filter != "robert")&&(filter != "sobel")&&(filter != "laplacian4")&&(filter != "laplacian8")) {
                 Console.WriteLine("Unknown filter!");
                return null;
@@ -145,7 +145,7 @@ namespace imageComputing
             return(window);
         }
 
-        public static AdvancedConvolutionWindow doCreateFilter(string filter, string norm) { //Create a 3x3  window for the given filter
+        public static AdvancedConvolutionWindow DoCreateFilter(string filter, string norm) { //Create a 3x3  window for the given filter
             if ((filter != "gaussian")&&(filter != "prewitt")&&(filter != "robert")&&(filter != "sobel")&&(filter != "laplacian4")&&(filter != "laplacian8")) {
                 Console.WriteLine("Unknown filter!");
                return null;

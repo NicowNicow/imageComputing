@@ -18,22 +18,51 @@ namespace imageComputing
         public float[] dynamicExpansionParameters {get; private set; } = null;
 
         public ImageData(string imagePath) { //Constructor
-            image = createBitmap(imagePath);
+            image = CreateBitmap(imagePath);
             fileName = Path.GetFileNameWithoutExtension(imagePath);
             pixelNumber = image.Height*image.Width;
         }
 
-        private void createHistogram() { //Initialize the histogram
+        private void CreateHistogram() { //Initialize the histogram
             this.histogram = new List<int>();
             this.histogram.AddRange(Enumerable.Repeat(0, 256));
         }
 
-        private void createCumulativeHistogram() { //Initialize the cumulative histogram
+        private void CreateCumulativeHistogram() { //Initialize the cumulative histogram
             this.cumulativeHistogram = new List<int>();
             this.cumulativeHistogram.AddRange(Enumerable.Repeat(0, 256));
         }
 
-        private FasterBitmap createBitmap(string imagePath) { //Initialization of the Bitmap and FasterBitmap entities
+        public int GetIndexMax() { //Get the index of the hightest peak of an histogram
+            int maxTempo = 0;
+            int maxIndex = 0;
+            for (int index = 0; index < 256; index++) {
+                if (this.histogram[index] >= maxTempo) {
+                    maxTempo = this.histogram[index];
+                    maxIndex = index;
+                }
+            }
+            return (maxIndex);
+        }
+
+        public List<int> GetNMaxIndex(int indexNumber) { //get the indexes of the n highest peaks of the histogram, except the white one
+            int[] histogramCopy = new int[256];
+            List<int> maxIndexes = new List<int>();
+            this.histogram.CopyTo(histogramCopy);
+            while ((maxIndexes.Count != indexNumber)&&(histogramCopy.Max() != 0)) {
+                int index = histogram.IndexOf(histogramCopy.Max());
+                if (index == 255) {
+                    histogramCopy[index] = 0;
+                }
+                else {
+                    maxIndexes.Add(index);
+                    histogramCopy[index] = 0;
+                }
+            }
+            return maxIndexes;
+        }
+
+        private FasterBitmap CreateBitmap(string imagePath) { //Initialization of the Bitmap and FasterBitmap entities
             try {
                 this.bitmapImage = new Bitmap(imagePath);
             }
@@ -50,14 +79,14 @@ namespace imageComputing
             return(imageFast);
         }
 
-        public void saveBitmap(string savePath) {  //Save the final Bitmap
+        public void SaveBitmap(string savePath) {  //Save the final Bitmap
             this.image.UnlockBits();
             this.bitmapImage.Save(savePath);
         }
 
-        public void getHistogramFromImage() { //Calculate the image's histogram
+        public void GetHistogramFromImage() { //Calculate the image's histogram
             int greyLevel; 
-            createHistogram();
+            CreateHistogram();
             for (int yIndex=0; yIndex<this.image.Height; yIndex++) {
                 for (int xIndex=0; xIndex<this.image.Width; xIndex++) {
                     Color pixelColor = this.image.GetPixel(xIndex, yIndex);
@@ -67,8 +96,8 @@ namespace imageComputing
             }
         }
 
-        public void getHistogramFromColoredImage() { //Calculate the histogram from a colored image
-            createHistogram();
+        public void GetHistogramFromColoredImage() { //Calculate the histogram from a colored image
+            CreateHistogram();
             List<HSVColor> colorList = new List<HSVColor>();
             for (int yIndex = 0; yIndex <this.image.Height; yIndex++) {
                 for (int xIndex=0; xIndex<this.image.Width; xIndex++) {
@@ -81,16 +110,16 @@ namespace imageComputing
             }
         }
 
-        public void getCumulativeHistogram() { //Calculate the image's cumulative histogram
+        public void GetCumulativeHistogram() { //Calculate the image's cumulative histogram
             int sum = 0;
-            createCumulativeHistogram();
+            CreateCumulativeHistogram();
             for (int index=0; index<256; index++) {
                 sum = sum + this.histogram[index];
                 this.cumulativeHistogram[index] = sum;
             }
         }
 
-        public void getEntropy() { //Calculate the image entropy
+        public void GetEntropy() { //Calculate the image entropy
             double entropySum = 0;
             double tempValue = 0;
             double maxPixel = (double) this.image.Height*this.image.Width ;
@@ -103,17 +132,17 @@ namespace imageComputing
             this.entropy = -entropySum;
         }
 
-        public void getExpansionParameters() { //Calculate the two parameters for dynamic expansion
+        public void GetExpansionParameters() { //Calculate the two parameters for dynamic expansion
             float [] parameters = {0,0};
             int h0 = 0, h1 = 255;
-            h0 = getMinHistogram();
-            h1 = getMaxHistogram();
+            h0 = GetMinHistogram();
+            h1 = GetMaxHistogram();
             parameters[0] = (float)(255/(h1-h0));
             parameters[1] = (float)((-255*h0)/(h1-h0));
             this.dynamicExpansionParameters = parameters;
         }
 
-        private int getMinHistogram() {
+        private int GetMinHistogram() {
             int h0 = 0;
             for (int index=1; index<256; index++) {
                 if (this.histogram[index]!=0) {
@@ -124,7 +153,7 @@ namespace imageComputing
             return(h0);
         }
 
-        private int getMaxHistogram() {
+        private int GetMaxHistogram() {
             int h1 = 255;
             for (int index=254; index>=0; index--) {
                 if (this.histogram[index]!=0) {

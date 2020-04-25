@@ -5,7 +5,8 @@ using System.Linq;
 
 namespace imageComputing {
     
-    public class HSVColor {
+    public class HSVColor
+    {
         public float hue {get; private set;}
         public float saturation {get; private set;}
         public float value {get; private set;}
@@ -52,6 +53,7 @@ namespace imageComputing {
         public static Color HSVtoRGB(HSVColor color) {
             if (color.saturation == 0) {
                 int greyLevel = Convert.ToInt32(color.value*255);
+                Console.WriteLine("Stop");
                 return Color.FromArgb(greyLevel, greyLevel, greyLevel);
             }
             else {

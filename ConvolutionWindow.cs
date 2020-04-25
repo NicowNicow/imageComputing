@@ -66,13 +66,13 @@ namespace imageComputing
     public abstract class CreateConvolutionWindow 
     {
 
-        public static ConvolutionWindow doCreate(string diameter, string filter) { //Create a Window with the selected diameter and filter
+        public static ConvolutionWindow DoCreate(string diameter, string filter) { //Create a Window with the selected diameter and filter
             int diameterTemp = 0;
             if ((!int.TryParse(diameter, out diameterTemp))||(diameterTemp%2==0)) {
                 Console.WriteLine("Given diameter is invalid!");
                 return null;
             }
-            if ((filter != "median")&&(filter != "dilation")&&(filter != "erosion")&&(filter != "opening")&&(filter != "closing")&&(filter != "colored")) {
+            if ((filter != "median")&&(filter != "dilation")&&(filter != "erosion")&&(filter != "opening")&&(filter != "closing")&&(filter != "colored")&&(filter != "negative")) {
                 filter = "median";
             }
             ConvolutionWindow window = new ConvolutionWindow(diameterTemp, filter);
@@ -83,7 +83,7 @@ namespace imageComputing
             return(window);
         }
 
-        public static ConvolutionWindow doCreate(string diameter) { //Create a Median Filter Window with the selected diameter
+        public static ConvolutionWindow DoCreate(string diameter) { //Create a Median Filter Window with the selected diameter
             int diameterTemp = 0;
             if ((!int.TryParse(diameter, out diameterTemp))||(diameterTemp%2==0)) {
                 Console.WriteLine("Given diameter is invalid!");

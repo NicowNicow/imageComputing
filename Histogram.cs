@@ -9,21 +9,21 @@ namespace imageComputing
     {
         private static int tempMax = 0;
 
-        public static void drawHistogram(ImageData toCompute) { //Draw the histogram on an output bmp file
-            List<float> sticksHeight = getSticksHeight(toCompute);
-            Bitmap drawImage = drawWhite(toCompute);
-            drawImage = drawSticks(drawImage, sticksHeight);
+        public static void DrawHistogram(ImageData toCompute) { //Draw the histogram on an output bmp file
+            List<float> sticksHeight = GetSticksHeight(toCompute);
+            Bitmap drawImage = DrawWhite(toCompute);
+            drawImage = DrawSticks(drawImage, sticksHeight);
             drawImage.Save("results/" + toCompute.fileName + "HistogramResult.bmp");
         }
 
-        public static void drawCumulativeHistogram(ImageData toCompute) { //Draw the cumulative histogram on an output bmp file
-            List<float> sticksHeight = getSticksHeight(toCompute);
-            Bitmap drawImage = drawWhite(toCompute);
-            drawImage = drawCumulativeSticks(toCompute, drawImage);
+        public static void DrawCumulativeHistogram(ImageData toCompute) { //Draw the cumulative histogram on an output bmp file
+            List<float> sticksHeight = GetSticksHeight(toCompute);
+            Bitmap drawImage = DrawWhite(toCompute);
+            drawImage = DrawCumulativeSticks(toCompute, drawImage);
             drawImage.Save("results/" + toCompute.fileName + "CumulativeHistogramResult.bmp");
         }
 
-        public static List<float> getSticksHeight(ImageData toCompute) { //Calculate a representative height for each "stick" of the histogram
+        public static List<float> GetSticksHeight(ImageData toCompute) { //Calculate a representative height for each "stick" of the histogram
             List<float> sticksHeight = new List<float>();
             sticksHeight.AddRange(Enumerable.Repeat(0f, 256));
             for (int index =0; index< 256; index++) {
@@ -37,7 +37,7 @@ namespace imageComputing
             return(sticksHeight);
         }
 
-        public static Bitmap drawWhite(ImageData toCompute) { //Draw a white background
+        public static Bitmap DrawWhite(ImageData toCompute) { //Draw a white background
             Bitmap drawImage = new Bitmap(256, toCompute.image.Height);
             Color white = Color.FromName("White");
             for (int Xindex=0; Xindex<256; Xindex++) {
@@ -48,7 +48,7 @@ namespace imageComputing
             return(drawImage);
         }
 
-        public static Bitmap drawSticks(Bitmap drawImage, List<float> sticksHeight) { //Draw the histogram "sticks"
+        public static Bitmap DrawSticks(Bitmap drawImage, List<float> sticksHeight) { //Draw the histogram "sticks"
             Color black = Color.FromName("Black");
             for (int Xindex=0; Xindex< 256; Xindex++) {
                 for (int Yindex=(drawImage.Height - 1); Yindex>drawImage.Height- 1 -(int)sticksHeight[Xindex]; Yindex--) {
@@ -58,7 +58,7 @@ namespace imageComputing
             return(drawImage);
         }
 
-        public static Bitmap drawCumulativeSticks(ImageData toCompute, Bitmap drawImage) { //Draw the histogram "sticks" for a cumulative histogram
+        public static Bitmap DrawCumulativeSticks(ImageData toCompute, Bitmap drawImage) { //Draw the histogram "sticks" for a cumulative histogram
             Color black = Color.FromName("Black");
             int cumulativeHeight = 0;
             int totalPixel = toCompute.image.Height*toCompute.image.Width;
@@ -71,7 +71,7 @@ namespace imageComputing
             return(drawImage);
         }
 
-        public static void drawDynamicExpansion(ImageData toCompute) {
+        public static void DrawDynamicExpansion(ImageData toCompute) {
             for (int yIndex=0; yIndex<toCompute.image.Height; yIndex++) {
                 for (int xIndex=0; xIndex<toCompute.image.Width; xIndex++) {
                     Color currentColor = toCompute.image.GetPixel(xIndex,yIndex);
@@ -87,20 +87,20 @@ namespace imageComputing
                     toCompute.image.SetPixel(xIndex, yIndex, Color.FromArgb(red, green, blue));
                 }
             }
-            toCompute.saveBitmap("results/" + toCompute.fileName + "DynamicExpansionResult.bmp");
+            toCompute.SaveBitmap("results/" + toCompute.fileName + "DynamicExpansionResult.bmp");
         }
 
-        public static void drawHistogramEqualization(ImageData toCompute) {
+        public static void DrawHistogramEqualization(ImageData toCompute) {
             for (int yIndex=0; yIndex<toCompute.image.Height; yIndex++) {
                 for (int xIndex=0; xIndex<toCompute.image.Width; xIndex++) {
                     Color pixelColor = toCompute.image.GetPixel(xIndex, yIndex);
                     int currentGreyLevel = (int)(0.299*pixelColor.R + 0.587*pixelColor.G + 0.114*pixelColor.B);
                     int newGreyLevel = (255*toCompute.cumulativeHistogram[currentGreyLevel]/(toCompute.image.Height*toCompute.image.Width));
-                    Console.WriteLine(newGreyLevel);
                     toCompute.image.SetPixel(xIndex, yIndex, Color.FromArgb(newGreyLevel, newGreyLevel, newGreyLevel));
                 }
             }
-            toCompute.saveBitmap("results/" + toCompute.fileName + "HistogramEqualizationResult.bmp");
+            toCompute.SaveBitmap("results/" + toCompute.fileName + "HistogramEqualizationResult.bmp");
         }
+
     }
 }

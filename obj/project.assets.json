@@ -153,11 +153,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\OneDrive\\Cours\\M1\\Computer Vision\\Code\\lib_csharp\\imageComputing\\imageComputing.csproj",
+      "projectUniqueName": "e:\\OneDrive\\Cours\\M1\\Computer Vision\\Code\\lib_csharp\\imageComputing\\imageComputing.csproj",
       "projectName": "imageComputing",
-      "projectPath": "E:\\OneDrive\\Cours\\M1\\Computer Vision\\Code\\lib_csharp\\imageComputing\\imageComputing.csproj",
+      "projectPath": "e:\\OneDrive\\Cours\\M1\\Computer Vision\\Code\\lib_csharp\\imageComputing\\imageComputing.csproj",
       "packagesPath": "C:\\Users\\Nico\\.nuget\\packages\\",
-      "outputPath": "E:\\OneDrive\\Cours\\M1\\Computer Vision\\Code\\lib_csharp\\imageComputing\\obj\\",
+      "outputPath": "e:\\OneDrive\\Cours\\M1\\Computer Vision\\Code\\lib_csharp\\imageComputing\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

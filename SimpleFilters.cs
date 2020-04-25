@@ -10,42 +10,56 @@ namespace imageComputing
     {
         static string savePath;
 
-        public static void doFilters(ImageData toCompute, string convolutionWindowDiameter, string convolutionWindoFilter){
-            ConvolutionWindow window = CreateConvolutionWindow.doCreate(convolutionWindowDiameter, convolutionWindoFilter);
-            chooseConvolution(window, toCompute);
-            toCompute.saveBitmap(savePath);
+        public static void DoFilters(ImageData toCompute, string ConvolutionWindowDiameter, string convolutionWindowFilter, bool saveResult){
+            ConvolutionWindow window = CreateConvolutionWindow.DoCreate(ConvolutionWindowDiameter, convolutionWindowFilter);
+            ChooseConvolution(window, toCompute);
+            if (saveResult == true) toCompute.SaveBitmap(savePath);
         }
 
-        static void chooseConvolution(ConvolutionWindow window, ImageData toCompute) {
-            if (window.processingFilter == "median") {
-                doMedianFilter(window, toCompute);
+        static void ChooseConvolution(ConvolutionWindow window, ImageData toCompute) {
+            if (window.processingFilter == "negative") {
+                DoNegativeFilter(toCompute);
+                savePath = "results/" + toCompute.fileName + "NegativeFilterResult.bmp";
+            }
+            else if (window.processingFilter == "median") {
+                DoMedianFilter(window, toCompute);
                 savePath = "results/" + toCompute.fileName + "MedianFilterResult.bmp";
             }
-            if (window.processingFilter == "colored") {
-                doColoredMedianFilter(window, toCompute);
+            else if (window.processingFilter == "colored") {
+                DoColoredMedianFilter(window, toCompute);
                 savePath = "results/" + toCompute.fileName + "ColoredMedianFilterResult.bmp";
             }
             else if (window.processingFilter == "dilation") {
-                doDilation(window, toCompute);
+                DoDilation(window, toCompute);
                 savePath = "results/" + toCompute.fileName + "DilationResult.bmp";
             }
             else if (window.processingFilter == "erosion") {
-                doErosion(window, toCompute);
+                DoErosion(window, toCompute);
                 savePath = "results/" + toCompute.fileName + "ErosionResult.bmp";
             }
             else if (window.processingFilter == "closing") {
-                doDilation(window, toCompute);
-                doErosion(window, toCompute);
+                DoDilation(window, toCompute);
+                DoErosion(window, toCompute);
                 savePath = "results/" + toCompute.fileName + "ClosingResult.bmp";
             }
             else if (window.processingFilter == "opening") {
-                doErosion(window, toCompute);
-                doDilation(window, toCompute);
+                DoErosion(window, toCompute);
+                DoDilation(window, toCompute);
                 savePath = "results/" + toCompute.fileName + "OpeningResult.bmp";
             }
         }
 
-        static void doMedianFilter(ConvolutionWindow window, ImageData toCompute) {
+        static void DoNegativeFilter(ImageData toCompute) {
+            for (int yIndex=0; yIndex<toCompute.image.Height; yIndex++) {
+                for (int xIndex=0; xIndex<toCompute.image.Width; xIndex++) {
+                    Color currentPixelColor = toCompute.image.GetPixel(xIndex, yIndex);
+                    Color newPixelColor = Color.FromArgb(255 - currentPixelColor.R, 255 - currentPixelColor.G, 255 - currentPixelColor.B);
+                    toCompute.image.SetPixel(xIndex, yIndex, newPixelColor);
+                }
+            }
+        }
+
+        static void DoMedianFilter(ConvolutionWindow window, ImageData toCompute) {
             for (int yIndex=0; yIndex<toCompute.image.Height; yIndex++) {
                 for (int xIndex=0; xIndex<toCompute.image.Width; xIndex++) {
                     window.pixelsCounter = 0;
@@ -58,7 +72,7 @@ namespace imageComputing
             }
         }
 
-        static void doColoredMedianFilter(ConvolutionWindow window, ImageData toCompute) {
+        static void DoColoredMedianFilter(ConvolutionWindow window, ImageData toCompute) {
             for (int yIndex=0; yIndex<toCompute.image.Height; yIndex++) {
                 for (int xIndex=0; xIndex<toCompute.image.Width; xIndex++) {
                     window.pixelsCounter = 0;
@@ -72,7 +86,7 @@ namespace imageComputing
             }
         }
 
-        static void doDilation(ConvolutionWindow window, ImageData toCompute) {
+        static void DoDilation(ConvolutionWindow window, ImageData toCompute) {
             List<Color> colorList = new List<Color>();
             for (int yIndex=0; yIndex<toCompute.image.Height; yIndex++) {
                 for (int xIndex=0; xIndex<toCompute.image.Width; xIndex++) {
@@ -91,7 +105,7 @@ namespace imageComputing
             }
         }
 
-        static void doErosion(ConvolutionWindow window, ImageData toCompute) {
+        static void DoErosion(ConvolutionWindow window, ImageData toCompute) {
             List<Color> colorList = new List<Color>();
             for (int Yindex=0; Yindex<toCompute.image.Height; Yindex++) {
                 for (int Xindex=0; Xindex<toCompute.image.Width; Xindex++) {

@@ -8,12 +8,11 @@ namespace imageComputing
 
 /*TODO: 
 Reconnaissance de forme:
-    Toutes les fonctions Slides partie 5
-    Toutes les fonctions Slides partie 6
-    Pour quadtree, croissance de formes et les graines: interface graphique rapide pour choisir ou mettre les graines initiales
-Fonctions de machine learning
-    Réseau de Neurones
-    (...)
+    Watershed
+    Snakes
+    Quadtree
+    Final Erosion
+    Toutes les fonctions Slides partie 7
 Débugger le seuillage par Variance Multiniveaux (Possiblement juste selectionner les seuils correspondants au k plus hautes variances, mais c'est pas fou)
 Créer les dll
 Faire une doc propre (Pour chaque fonction de la librairie)
@@ -32,7 +31,18 @@ Faire une doc propre (Pour chaque fonction de la librairie)
                 Console.WriteLine("Please give the path to a bitmap image!");
                 return;
             }
-            SimpleFilters.doFilters(toCompute, "3", "colored");
+            toCompute.GetHistogramFromColoredImage();
+            RegionGrowing test = new RegionGrowing();
+                var watch = new System.Diagnostics.Stopwatch();
+                watch.Start();
+            test.DoRegionGrowing(toCompute);
+                watch.Stop();
+                Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms"); 
+                watch.Reset();
+                watch.Start();
+            Segmentation.DoSegmentation(toCompute, test.zonesMap, "dilation", true);
+                watch.Stop();
+                Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms"); 
         }
 
     }

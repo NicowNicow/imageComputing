@@ -17,7 +17,7 @@ namespace imageComputing
                 return;
             }
             else {
-                doSimpleThreshold(toCompute, threshold, "results/" + toCompute.fileName + "ManualThresholdResult.bmp");
+                DoSimpleThreshold(toCompute, threshold, "results/" + toCompute.fileName + "ManualThresholdResult.bmp");
             }
         }
 
@@ -42,11 +42,11 @@ namespace imageComputing
                 return;
             }
             else {
-                doMultiThreshold(toCompute, thresholds, "results/" + toCompute.fileName + "ManualMultiThresholdResult.bmp");
+                DoMultiThreshold(toCompute, thresholds, "results/" + toCompute.fileName + "ManualMultiThresholdResult.bmp");
             }
         }
 
-        private static void doSimpleThreshold(ImageData toCompute, int threshold, string savePath) {
+        private static void DoSimpleThreshold(ImageData toCompute, int threshold, string savePath) {
             Color currentColor; 
             for (int yIndex=0; yIndex < toCompute.image.Height; yIndex++) {
                 for (int xIndex=0; xIndex < toCompute.image.Width; xIndex++) {
@@ -61,10 +61,10 @@ namespace imageComputing
                     toCompute.image.SetPixel(xIndex,yIndex, currentColor);
                 }
             }
-            toCompute.saveBitmap(savePath);
+            toCompute.SaveBitmap(savePath);
         }
 
-        private static void doMultiThreshold(ImageData toCompute, List<int> thresholds, string savePath) {
+        private static void DoMultiThreshold(ImageData toCompute, List<int> thresholds, string savePath) {
             Random random = new Random();
             int colorIndex = 0;
             List<Color> newPixelColor = new List<Color>();
@@ -93,10 +93,10 @@ namespace imageComputing
                     colorIndex++;
                 }
             }
-            toCompute.saveBitmap(savePath);
+            toCompute.SaveBitmap(savePath);
         }
 
-        public static void simpleVarianceThreshold(ImageData toCompute) {
+        public static void SimpleVarianceThreshold(ImageData toCompute) {
             double maxVariance = 0;
             int maxThreshold = 0;
             for (int threshold = 0; threshold < 256; threshold++) {
@@ -127,10 +127,10 @@ namespace imageComputing
                     maxThreshold = threshold;
                 }
             }
-            doSimpleThreshold(toCompute, maxThreshold, "results/" + toCompute.fileName + "SimpleVarianceThresholdResult.bmp");
+            DoSimpleThreshold(toCompute, maxThreshold, "results/" + toCompute.fileName + "SimpleVarianceThresholdResult.bmp");
         }
 
-        public static void simpleEntropyThreshold(ImageData toCompute) {
+        public static void SimpleEntropyThreshold(ImageData toCompute) {
             double maxEntropy = 0;
             int maxThreshold = 0;
             for (int threshold = 0; threshold < 256; threshold++) {
@@ -158,17 +158,17 @@ namespace imageComputing
                     maxThreshold = threshold;
                 }
             }
-            doSimpleThreshold(toCompute, maxThreshold, "results/" + toCompute.fileName + "SimpleEntropyThresholdResult.bmp");
+            DoSimpleThreshold(toCompute, maxThreshold, "results/" + toCompute.fileName + "SimpleEntropyThresholdResult.bmp");
         }
 
-        public static void multiVarianceThreshold(ImageData toCompute, int thresholdsNumber) {
+        public static void MultiVarianceThreshold(ImageData toCompute, int thresholdsNumber) {
             Random random = new Random();
             double maxVariance = 0;
             List<int> thresholds = new List<int>();
             List<int> possibleThresholds = new List<int>();
             possibleThresholds.AddRange(Enumerable.Repeat(0, thresholdsNumber));
             for (long index = 0; index < (long)Math.Pow(256, thresholdsNumber); index++) {
-                double currentVariance = calculateMultiVariance(toCompute, possibleThresholds, thresholdsNumber);
+                double currentVariance = CalculateMultiVariance(toCompute, possibleThresholds, thresholdsNumber);
                 if (currentVariance >= maxVariance) {
                     thresholds.Clear();
                     thresholds.AddRange(Enumerable.Repeat(0, thresholdsNumber));
@@ -193,10 +193,10 @@ namespace imageComputing
              for (int index =0; index <thresholdsNumber; index++) {
                 Console.WriteLine(thresholds[index]);
              }
-            doMultiThreshold(toCompute, thresholds, "results/" + toCompute.fileName + "MultiVarianceThresholdResult.bmp");
+            DoMultiThreshold(toCompute, thresholds, "results/" + toCompute.fileName + "MultiVarianceThresholdResult.bmp");
         }
 
-        private static double calculateMultiVariance(ImageData toCompute, List<int> thresholds, int thresholdsNumber) {
+        private static double CalculateMultiVariance(ImageData toCompute, List<int> thresholds, int thresholdsNumber) {
             double variance = 0;
             List<int> countPixelsInf = new List<int>();
             List<int> countWeightedPixelsInf = new List<int>();
@@ -229,14 +229,14 @@ namespace imageComputing
             return(variance);
         }
 
-        public static void multiEntropyThreshold(ImageData toCompute, int thresholdsNumber) {
+        public static void MultiEntropyThreshold(ImageData toCompute, int thresholdsNumber) {
             Random random = new Random();
             double maxEntropy = 0;
             List<int> thresholds = new List<int>();
             List<int> possibleThresholds = new List<int>();
             possibleThresholds.AddRange(Enumerable.Repeat(0, thresholdsNumber));
             for (long index = 0; index < (long)Math.Pow(256, thresholdsNumber); index++) {
-                double currentEntropy = calculateMultiEntropy(toCompute, possibleThresholds, thresholdsNumber);
+                double currentEntropy = CalculateMultiEntropy(toCompute, possibleThresholds, thresholdsNumber);
                 if (currentEntropy >= maxEntropy) {
                     thresholds.Clear();
                     thresholds.AddRange(Enumerable.Repeat(0, thresholdsNumber));
@@ -258,10 +258,10 @@ namespace imageComputing
                     }
                 }
             }
-            doMultiThreshold(toCompute, thresholds, "results/" + toCompute.fileName + "MultiEntropyThresholdResult.bmp");
+            DoMultiThreshold(toCompute, thresholds, "results/" + toCompute.fileName + "MultiEntropyThresholdResult.bmp");
         }
 
-        private static double calculateMultiEntropy(ImageData toCompute, List<int> thresholds, int thresholdsNumber) { 
+        private static double CalculateMultiEntropy(ImageData toCompute, List<int> thresholds, int thresholdsNumber) { 
             double entropy = 0;
             double log = 0;
             int productCountPixelInf = 1;
