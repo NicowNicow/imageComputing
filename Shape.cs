@@ -10,6 +10,8 @@ namespace imageComputing
         public BoundingBox boundingBox {get; private set;}
         public float inscribedDiameter {get; private set;}
         public float circumscribedDiameter {get; private set;}
+        public int boundingBoxPerimeter {get; private set;}
+        public int feretBoudingBoxPerimeter {get; private set;}
         public float croftonPerimeter {get; private set;}
         public int surface {get; private set;}
         public float radialCircularity {get; private set;}
@@ -19,9 +21,28 @@ namespace imageComputing
         public float convexity {get; private set;}
 
         public Shape(int[][] zonesList, int zoneNumber) {
+            Initialize();
             this.inShape = GetPixels(zonesList, zoneNumber);
             this.surface = this.inShape.Count;
             this.boundingBox = GetBounding();
+            this.boundingBoxPerimeter = GetBoundingBoxPerimeter();
+            this.geometricalCircularity = GetGeometricalCircularity();
+        }
+
+        private void Initialize() {
+            this.inShape = null;
+            this.boundingBox = null;
+            this.inscribedDiameter = 0;
+            this.circumscribedDiameter = 0;
+            this.boundingBoxPerimeter = 0;
+            this.feretBoudingBoxPerimeter = 0;
+            this.croftonPerimeter = 0;
+            this.surface = 0;
+            this.radialCircularity = 0;
+            this.geometricalCircularity = 0;
+            this.symmetry = 0;
+            this.connectivity = 0;
+            this.convexity = 0;
         }
 
         private List<Point> GetPixels(int[][] zonesList, int zoneNumber) {
@@ -48,6 +69,10 @@ namespace imageComputing
                 if ((inShape[index].y >= tempoYmax)||(tempoYmax == -1)) tempoYmax = inShape[index].y;
             }
             return new BoundingBox(tempoXmin, tempoXmax, tempoYmin, tempoYmax);
+        }
+
+        private int GetBoundingBoxPerimeter() {
+            return 2*(this.boundingBox.yMax - this.boundingBox.yMin) + 2*(this.boundingBox.xMax - this.boundingBox.xMin);
         }
 
         public void DrawBoundingBox(ImageData toCompute, int zoneNumber) {
@@ -78,6 +103,20 @@ namespace imageComputing
                 }
             }
             toCompute.SaveBitmap("results/" + toCompute.fileName + "BoundingBoxShape" + zoneNumber + ".bmp");
+        }
+
+        private float GetGeometricalCircularity() {
+            float circularity = 0;
+            if (this.croftonPerimeter != 0) {
+                circularity = (float)(4*Math.PI*this.surface)/(float)(this.croftonPerimeter*this.croftonPerimeter);
+            }
+            else if (this.feretBoudingBoxPerimeter != 0) {
+                circularity = (float)(4*Math.PI*this.surface)/(float)(this.feretBoudingBoxPerimeter*this.feretBoudingBoxPerimeter);
+            }
+            else {
+                circularity = (float)(4*Math.PI*this.surface)/(float)(this.boundingBoxPerimeter*this.boundingBoxPerimeter);
+            }
+            return circularity;
         }
 
     }

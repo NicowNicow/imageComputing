@@ -10,19 +10,18 @@ namespace imageComputing
 Reconnaissance de forme:
     Snakes
     Quadtree
-    Périmètre (crofton)
-    Circularité géométrique
+    Boite englobante (Feret)
+    Perimètre (Feret)
+    Périmètre (Crofton)
     Connexité
-    Boite englobante (ferret)
-    circularité radiale
-    convexité
-    diametres inscrits & conscrits
-    blaschke
+    Circularité radiale
+    Convexité
+    Diametres inscrits & conscrits
+    Blaschke
 Débugger le multiseuillage par Variance 
-Améliorer la croissance de zone
 Faire une doc propre (Pour chaque fonction de la librairie)
 Optimisation a fond (virer les listes et les try-catch, ...)
-Suppresion de ce fichier, creation d'un imageComputing.dll selfcontained pour utiliser la librairie de fonctions... Bah comme une librairie
+Suppresion de ce fichier, creation d'un imageComputing.dll selfcontained 
 */
 
 {
@@ -51,6 +50,7 @@ Suppresion de ce fichier, creation d'un imageComputing.dll selfcontained pour ut
             shape.DrawBoundingBox(toCompute, 1);
                 watch.Stop();
                 Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms"); 
+            Console.WriteLine(shape.geometricalCircularity);
         }
 
     }
