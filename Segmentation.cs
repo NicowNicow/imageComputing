@@ -110,8 +110,26 @@ namespace imageComputing
         }
 
         public static int[][] DoFinalErosion(int[][] zonesMap) {
-            //Stuff
-            return zonesMap;
+            int[][] copyZonesMap = new int[zonesMap.Length][];
+            for (int index = 0; index < zonesMap.Length; index++) {
+                copyZonesMap[index] = new int[zonesMap[index].Length];
+            }
+            bool stop = false;
+            while (!stop) {
+                int pixelCount = 0;
+                Array.Copy(zonesMap, copyZonesMap, zonesMap.Length);
+                zonesMap = DoErosion(zonesMap);
+                for (int yIndex = 0; yIndex < zonesMap.Length; yIndex++) {
+                    for (int xIndex = 0; xIndex < zonesMap[yIndex].Length; xIndex++) {
+                        if (zonesMap[yIndex][xIndex] != 0) pixelCount++;
+                    }
+                }
+                if (pixelCount == 0) {
+                    stop = true;
+                }
+
+            }
+            return copyZonesMap;
         }
 
         private static int countZone(int[][] zonesMap) {

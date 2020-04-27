@@ -8,14 +8,21 @@ namespace imageComputing
 
 /*TODO: 
 Reconnaissance de forme:
-    Watershed
     Snakes
     Quadtree
-    Final Erosion
-    Toutes les fonctions Slides partie 7
-Débugger le seuillage par Variance Multiniveaux (Possiblement juste selectionner les seuils correspondants au k plus hautes variances, mais c'est pas fou)
-Créer les dll
+    Périmètre (crofton)
+    Circularité géométrique
+    Connexité
+    Boite englobante (ferret)
+    circularité radiale
+    convexité
+    diametres inscrits & conscrits
+    blaschke
+Débugger le multiseuillage par Variance 
+Améliorer la croissance de zone
 Faire une doc propre (Pour chaque fonction de la librairie)
+Optimisation a fond (virer les listes et les try-catch, ...)
+Suppresion de ce fichier, creation d'un imageComputing.dll selfcontained pour utiliser la librairie de fonctions... Bah comme une librairie
 */
 
 {
@@ -40,7 +47,8 @@ Faire une doc propre (Pour chaque fonction de la librairie)
                 Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms"); 
                 watch.Reset();
                 watch.Start();
-            Segmentation.DoSegmentation(toCompute, test.zonesMap, "dilation", true);
+            Shape shape = new Shape(test.zonesMap, 1);
+            shape.DrawBoundingBox(toCompute, 1);
                 watch.Stop();
                 Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms"); 
         }
