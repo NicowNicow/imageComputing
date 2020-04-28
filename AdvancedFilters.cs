@@ -81,7 +81,6 @@ namespace imageComputing
             List<Color> colorList = new List<Color>();
             for (int yIndex=0; yIndex<toCompute.image.Height; yIndex++) {
                 for (int xIndex=0; xIndex<toCompute.image.Width; xIndex++) {
-                    window.sumElements.Clear();
                     int[] values = SobelPrewittConvolution(window, toCompute.image, xIndex, yIndex);
                     int value = window.DoNorm(values);
                     if (value < 0) value = 0;
@@ -102,7 +101,6 @@ namespace imageComputing
             List<Color> colorList = new List<Color>();
             for (int yIndex=0; yIndex<toCompute.image.Height; yIndex++) {
                 for (int xIndex=0; xIndex<toCompute.image.Width; xIndex++) {
-                    window.sumElements.Clear();
                     int[] values = RobertConvolution(window, toCompute.image, xIndex, yIndex);
                     int value = window.DoNorm(values);
                     if (value < 0) value = 0;
@@ -143,13 +141,11 @@ namespace imageComputing
         static void StandardConvolution(AdvancedConvolutionWindow window, FasterBitmap toCompute, int centerPositionX, int centerPositionY) {
             for (int yIndex = centerPositionY - (window.windowDiameter/2); yIndex< centerPositionY + (window.windowDiameter/2) + 1; yIndex++) {
                 for (int xIndex = centerPositionX - (window.windowDiameter/2); xIndex<centerPositionX + (window.windowDiameter/2) + 1; xIndex++) {
-                    try {
+                    if ((yIndex < 0)||(yIndex >= toCompute.Height)||(xIndex < 0)||(xIndex >= toCompute.Width)) continue;
+                    else {
                         int yValueIndex = yIndex - centerPositionY + (window.windowDiameter/2);
                         int xValueIndex = xIndex - centerPositionX + (window.windowDiameter/2);
                         window.sumElements.Add((toCompute.GetPixel(xIndex, yIndex).B)*(window.valueMatrix[yValueIndex][xValueIndex])); 
-                    }
-                    catch (ArgumentOutOfRangeException) {
-                        continue;
                     }
                 }
             } 
@@ -162,12 +158,10 @@ namespace imageComputing
             int yComputation = 0;
             for (int yIndex = centerPositionY; yIndex< centerPositionY + 2 ; yIndex++) {
                 for (int xIndex = centerPositionX; xIndex<centerPositionX + 2; xIndex++) {
-                    try {
+                    if ((yIndex < 0)||(yIndex >= toCompute.Height)||(xIndex < 0)||(xIndex >= toCompute.Width)) continue;
+                    else {
                         xComputation = xComputation + (toCompute.GetPixel(xIndex, yIndex).B * window.horizontalValueMatrix[yIndex - centerPositionY][xIndex - centerPositionX]);
                         yComputation = yComputation + (toCompute.GetPixel(xIndex, yIndex).B * window.verticalValueMatrix[yIndex - centerPositionY][xIndex - centerPositionX]);
-                    }
-                    catch (ArgumentOutOfRangeException) {
-                        continue;
                     }
                 }
             } 
@@ -184,12 +178,10 @@ namespace imageComputing
             for (int yIndex = centerPositionY - (window.windowDiameter/2); yIndex< centerPositionY + (window.windowDiameter/2) + 1; yIndex++) {
                 int xIndexFromZero = 0;
                 for (int xIndex = centerPositionX - (window.windowDiameter/2); xIndex<centerPositionX + (window.windowDiameter/2) + 1; xIndex++) {
-                    try {
+                    if ((yIndex < 0)||(yIndex >= toCompute.Height)||(xIndex < 0)||(xIndex >= toCompute.Width)) continue;
+                    else {
                         xComputation = xComputation + (toCompute.GetPixel(xIndex, yIndex).B * window.horizontalValueMatrix[yIndexFromZero][xIndexFromZero]);
                         yComputation = yComputation + (toCompute.GetPixel(xIndex, yIndex).B * window.verticalValueMatrix[yIndexFromZero][xIndexFromZero]);
-                    }
-                    catch (ArgumentOutOfRangeException) {
-                        continue;
                     }
                     xIndexFromZero++;
                 }

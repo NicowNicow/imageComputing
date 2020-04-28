@@ -32,14 +32,12 @@ namespace imageComputing
         }
 
         public void ConvolutionWindowPixelsSum(FasterBitmap toCompute, int centerPositionX, int centerPositionY) {
-            for (int Yindex = centerPositionY - (this.windowDiameter - 1); Yindex< centerPositionY + (this.windowDiameter -1); Yindex++) {
-                for (int Xindex = centerPositionX - (this.windowDiameter - 1); Xindex<centerPositionX + (this.windowDiameter -1); Xindex++) {
-                    try {
-                        this.sumElements.Add(toCompute.GetPixel(Xindex, Yindex).B); 
+            for (int yIndex = centerPositionY - (this.windowDiameter - 1); yIndex< centerPositionY + (this.windowDiameter -1); yIndex++) {
+                for (int xIndex = centerPositionX - (this.windowDiameter - 1); xIndex<centerPositionX + (this.windowDiameter -1); xIndex++) {
+                    if ((yIndex < 0)||(yIndex >= toCompute.Height)||(xIndex < 0)||(xIndex >= toCompute.Width)) continue;
+                    else {
+                        this.sumElements.Add(toCompute.GetPixel(xIndex, yIndex).B); 
                         this.pixelsCounter++;
-                    }
-                    catch (ArgumentOutOfRangeException) {
-                        continue;
                     }
                 }
             }
@@ -47,14 +45,12 @@ namespace imageComputing
         }
 
         public void ConvolutionWindowPixelsSumForColoredFilters(FasterBitmap toCompute, int centerPositionX, int centerPositionY) {
-            for (int Yindex = centerPositionY - (this.windowDiameter - 1); Yindex< centerPositionY + (this.windowDiameter -1); Yindex++) {
-                for (int Xindex = centerPositionX - (this.windowDiameter - 1); Xindex<centerPositionX + (this.windowDiameter -1); Xindex++) {
-                    try {
-                        this.sumColoredElements.Add(HSVColor.RGBtoHSV(toCompute.GetPixel(Xindex, Yindex)).value); 
+            for (int yIndex = centerPositionY - (this.windowDiameter - 1); yIndex< centerPositionY + (this.windowDiameter -1); yIndex++) {
+                for (int xIndex = centerPositionX - (this.windowDiameter - 1); xIndex<centerPositionX + (this.windowDiameter -1); xIndex++) {
+                    if ((yIndex < 0)||(yIndex >= toCompute.Height)||(xIndex < 0)||(xIndex >= toCompute.Width)) continue;
+                    else {
+                        this.sumColoredElements.Add(HSVColor.RGBtoHSV(toCompute.GetPixel(xIndex, yIndex)).value); 
                         this.pixelsCounter++;
-                    }
-                    catch (ArgumentOutOfRangeException) {
-                        continue;
                     }
                 }
             }

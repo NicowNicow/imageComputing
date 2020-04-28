@@ -33,7 +33,6 @@ namespace imageComputing
                 Width = sourceImage.Width;
                 Height = sourceImage.Height;
                 int pixelCount = Width * Height;
-                //Console.WriteLine(pixelCount);
                 Rectangle lockRectangle = new Rectangle(0, 0, Width, Height);
                 Depth = System.Drawing.Bitmap.GetPixelFormatSize(sourceImage.PixelFormat);
                 if (Depth != 8 && Depth != 24 && Depth != 32) {
@@ -64,7 +63,6 @@ namespace imageComputing
             Color color = Color.Empty;
             int colorCount = Depth / 8;
             uint indexPixel = (uint)(((yPosition * Width) + xPosition) * colorCount);
-            //Console.WriteLine(indexPixel);
             if (indexPixel > Pixels.Length - colorCount) return color;
             if (Depth == 32) {
                 byte blue = Pixels[indexPixel];

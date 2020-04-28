@@ -85,21 +85,17 @@ namespace imageComputing
                 toCompute.image.SetPixel(this.inShape[index].x, this.inShape[index].y, Color.FromName("Black"));
             }
             for (int yIndex = this.boundingBox.yMin; yIndex <= this.boundingBox.yMax; yIndex++) {
-                try {
+                if ((yIndex < 0)||(yIndex >= toCompute.image.Height)) continue;
+                else {
                     toCompute.image.SetPixel(this.boundingBox.xMin, yIndex, Color.FromName("Blue"));
                     toCompute.image.SetPixel(this.boundingBox.xMax, yIndex, Color.FromName("Blue"));
                 }
-                catch (IndexOutOfRangeException) {
-                    continue;
-                }
             }
             for (int xIndex = this.boundingBox.xMin; xIndex <= this.boundingBox.xMax; xIndex++) {
-                try {
+                if ((xIndex < 0)||(xIndex >= toCompute.image.Width)) continue;
+                else {
                     toCompute.image.SetPixel(xIndex, this.boundingBox.yMin, Color.FromName("Blue"));
                     toCompute.image.SetPixel(xIndex, this.boundingBox.yMax, Color.FromName("Blue"));
-                }
-                catch (IndexOutOfRangeException) {
-                    continue;
                 }
             }
             toCompute.SaveBitmap("results/" + toCompute.fileName + "BoundingBoxShape" + zoneNumber + ".bmp");

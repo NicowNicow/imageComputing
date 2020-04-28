@@ -20,7 +20,7 @@ Reconnaissance de forme:
     Blaschke
 Débugger le multiseuillage par Variance 
 Faire une doc propre (Pour chaque fonction de la librairie)
-Optimisation a fond (virer les listes et les try-catch, ...)
+Optimisation (virer les List<> superflues): Réduire le temps de processing du RegionGrowing
 Suppresion de ce fichier, creation d'un imageComputing.dll selfcontained 
 */
 
@@ -38,19 +38,25 @@ Suppresion de ce fichier, creation d'un imageComputing.dll selfcontained
                 return;
             }
             toCompute.GetHistogramFromColoredImage();
+            // var watch = new System.Diagnostics.Stopwatch();
+            // watch.Start();
+            // AdvancedFilters.DoFilters(toCompute, "prewitt", true);
+            // watch.Stop();
+            // Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms"); 
             RegionGrowing test = new RegionGrowing();
+            test.DoRegionGrowing(toCompute);
                 var watch = new System.Diagnostics.Stopwatch();
                 watch.Start();
-            test.DoRegionGrowing(toCompute);
+            Segmentation.DoSegmentation(toCompute, test.zonesMap, "finalerosion", true);
                 watch.Stop();
                 Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms"); 
-                watch.Reset();
-                watch.Start();
-            Shape shape = new Shape(test.zonesMap, 1);
-            shape.DrawBoundingBox(toCompute, 1);
-                watch.Stop();
-                Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms"); 
-            Console.WriteLine(shape.geometricalCircularity);
+            //     watch.Reset();
+            //     watch.Start();
+            // Shape shape = new Shape(test.zonesMap, 1);
+            // shape.DrawBoundingBox(toCompute, 1);
+            //     watch.Stop();
+            //     Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms"); 
+            // Console.WriteLine(shape.geometricalCircularity);
         }
 
     }

@@ -23,10 +23,8 @@ namespace imageComputing
                         if ((this.zonesMap[yIndex][xIndex] != 0)&&(pixelGreyScale >= greyLevelIndex)&&(pixelGreyScale <= greyLevelIndex + isOkAltitude)) {
                             for (int yWindow = yIndex - 1; yWindow < yIndex + 2; yWindow++) {
                                 for (int xWindow = xIndex - 1; xWindow < xIndex + 2; xWindow++) {
-                                    try { 
-                                        if (this.zonesMap[yWindow][xWindow] == 0) this.zonesMap[yWindow][xWindow] = this.zonesMap[yIndex][xIndex]; 
-                                    }
-                                    catch (IndexOutOfRangeException) { continue;}
+                                    if ((yIndex < 0)||(yIndex >= toCompute.image.Height)||(xIndex < 0)||(xIndex >= toCompute.image.Width)) continue;
+                                    else if (this.zonesMap[yWindow][xWindow] == 0) this.zonesMap[yWindow][xWindow] = this.zonesMap[yIndex][xIndex]; 
                                 }
                             }
                         }
@@ -84,8 +82,8 @@ namespace imageComputing
                         int notAround = 0;
                         for (int yWindow = yIndex - 1; yWindow < yIndex + 2; yWindow++) {
                             for (int xWindow = xIndex - 1; xWindow < xIndex + 2; xWindow++) {
-                                try { if (this.zonesMap[yWindow][xWindow] != 0) notAround = this.zonesMap[yWindow][xWindow]; }
-                                catch (IndexOutOfRangeException) { continue;}
+                                if ((yIndex < 0)||(yIndex >= toCompute.image.Height)||(xIndex < 0)||(xIndex >= toCompute.image.Width)) continue;
+                                else if (this.zonesMap[yWindow][xWindow] != 0) notAround = this.zonesMap[yWindow][xWindow]; 
                             }
                         }
                         if (notAround == 0) {

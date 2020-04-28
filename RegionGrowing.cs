@@ -112,15 +112,11 @@ namespace imageComputing
                int pixelCounter = 0;
                for (int yIndex = point.y - 1; yIndex < point.y + 2; yIndex++) {
                    for (int xIndex = point.x - 1; xIndex < point.x + 2; xIndex++) {
-                       try {
-                           if (zonesMap[yIndex][xIndex] == 0) {
-                               sum = sum + HSVColor.HSVtoGreyLevelRGB(HSVColor.RGBtoHSV(toCompute.image.GetPixel(xIndex, yIndex))).R;
-                               pixelCounter++;
-                           }
-                       }
-                       catch (IndexOutOfRangeException) {
-                           continue;
-                       }
+                       if ((yIndex < 0)||(yIndex >= toCompute.image.Height)||(xIndex < 0)||(xIndex >= toCompute.image.Width)) continue;
+                       else if (zonesMap[yIndex][xIndex] == 0) {
+                            sum = sum + HSVColor.HSVtoGreyLevelRGB(HSVColor.RGBtoHSV(toCompute.image.GetPixel(xIndex, yIndex))).R;
+                            pixelCounter++;
+                        }
                    }
                }
                if (pixelCounter == 0) isNotPossible++;
@@ -131,12 +127,8 @@ namespace imageComputing
                     else {
                         for (int yIndex = point.y - 1; yIndex < point.y + 2; yIndex++) {
                             for (int xIndex = point.x - 1; xIndex < point.x + 2; xIndex++) {
-                                try {
-                                    zonesMap[yIndex][xIndex] =  point.mark;
-                                }
-                                catch (IndexOutOfRangeException) {
-                                    continue;
-                                }
+                                if ((yIndex < 0)||(yIndex >= toCompute.image.Height)||(xIndex < 0)||(xIndex >= toCompute.image.Width)) continue;
+                                else zonesMap[yIndex][xIndex] =  point.mark;
                             }
                         }
                     }

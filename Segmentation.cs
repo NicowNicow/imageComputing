@@ -63,11 +63,9 @@ namespace imageComputing
                     int pixelCounter = 0;
                     for (int yWindow = yIndex - 1; yWindow < yIndex + 2; yWindow++) {
                         for (int xWindow = xIndex - 1; xWindow < xIndex + 2; xWindow++) {
-                            try {
+                            if ((yWindow < 0)||(yWindow >= zonesMap.Length)||(xWindow < 0)||(xWindow >= zonesMap[yIndex].Length)) continue;
+                            else {
                                 if(zonesMap[yWindow][xWindow] == zonesMap[yIndex][xIndex]) pixelCounter++;
-                            }
-                            catch(IndexOutOfRangeException) {
-                                continue;
                             }
                         }
                     }
@@ -86,11 +84,9 @@ namespace imageComputing
                     if (zonesMap[yIndex][xIndex] != 0) {
                         for (int yWindow = yIndex - 1; yWindow < yIndex + 2; yWindow++) {
                             for (int xWindow = xIndex - 1; xWindow < xIndex + 2; xWindow++) {
-                                try {
+                                if ((yWindow < 0)||(yWindow >= zonesMap.Length)||(xWindow < 0)||(xWindow >= zonesMap[yIndex].Length)) continue;
+                                else {
                                     newZonesMap[yWindow][xWindow] = zonesMap[yIndex][xIndex];
-                                }
-                                catch(IndexOutOfRangeException) {
-                                    continue;
                                 }
                             }
                         }
