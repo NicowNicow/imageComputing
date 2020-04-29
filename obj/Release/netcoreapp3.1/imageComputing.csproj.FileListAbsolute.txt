@@ -1,0 +1,8 @@
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\bin\Release\netcoreapp3.1\imageComputing.deps.json
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\bin\Release\netcoreapp3.1\imageComputing.dll
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\bin\Release\netcoreapp3.1\imageComputing.pdb
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\obj\Release\netcoreapp3.1\imageComputing.csprojAssemblyReference.cache
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\obj\Release\netcoreapp3.1\imageComputing.AssemblyInfoInputs.cache
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\obj\Release\netcoreapp3.1\imageComputing.AssemblyInfo.cs
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\obj\Release\netcoreapp3.1\imageComputing.dll
+E:\OneDrive\Cours\M1\Computer Vision\Code\lib_csharp\imageComputing\obj\Release\netcoreapp3.1\imageComputing.pdb
